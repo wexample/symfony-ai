@@ -1,6 +1,0 @@
-page_title: Agents
-empty: No agent declared.
-column:
-  name: Name
-  model: Model
-  path: File
