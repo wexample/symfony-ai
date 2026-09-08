@@ -7,8 +7,8 @@
         {%- include '@WexampleSymfonyDesignSystemBundle/partials/properties.html.twig' with {
             class: 'properties properties--bordered',
             items: [
-                { key: '@page::field.provider' | trans, value: model.provider, html: false },
-                { key: '@page::field.name' | trans, value: model.name, html: false },
+                { key: '@page::field.provider' | trans, value: model.provider },
+                { key: '@page::field.name' | trans, value: model.name },
             ],
         } only -%}
     </div>
