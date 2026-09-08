@@ -8,13 +8,15 @@
 
     {{ table(
         [
-            { key: 'provider', label: '@page::column.provider' | trans },
+            { key: 'maker', label: '@page::column.maker' | trans },
             { key: 'name', label: '@page::column.name' | trans },
+            { key: 'api_id', label: '@page::column.api_id' | trans },
             { key: 'actions', label: '', cell: 'actions', class: 'table--cell--fit' },
         ],
         models|map(model => {
-            provider: model.provider,
+            maker: model.maker,
             name: model.name,
+            api_id: model.apiId,
             actions: [
                 {
                     icon: 'ph:bold/eye',

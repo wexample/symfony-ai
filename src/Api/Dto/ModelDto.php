@@ -8,12 +8,12 @@ use Wexample\SymfonyHelpers\Entity\AbstractEntity;
 
 class ModelDto extends AbstractEntityDto
 {
+    /** What a file writes to point at it. */
     public string $name;
 
-    public string $provider;
+    public string $maker;
 
-    /** What a file writes to point at it, `provider:name`. */
-    public string $reference;
+    public string $apiId;
 
     /**
      * @param Model $entity
@@ -23,8 +23,8 @@ class ModelDto extends AbstractEntityDto
         $dto = parent::fromEntity($entity);
 
         $dto->name = $entity->getName();
-        $dto->provider = $entity->getProvider();
-        $dto->reference = $entity->getReference();
+        $dto->maker = $entity->getMaker();
+        $dto->apiId = $entity->getApiId();
 
         return $dto;
     }

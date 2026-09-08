@@ -1,5 +1,6 @@
 page_title: Models
 empty: No model in the catalogue.
 column:
-  provider: Maker
+  maker: Maker
   name: Name
+  api_id: API id

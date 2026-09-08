@@ -34,7 +34,7 @@ class ModelController extends AbstractEntityPagesController
             'models' => $modelRepository->findBy(
                 [],
                 [
-                    'provider' => ModelRepository::SORT_ASC,
+                    'maker' => ModelRepository::SORT_ASC,
                     'name' => ModelRepository::SORT_ASC,
                 ]
             ),

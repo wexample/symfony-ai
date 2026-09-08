@@ -10,67 +10,63 @@ use Wexample\SymfonyHelpers\Entity\AbstractEntity;
 use Wexample\SymfonyHelpers\Entity\Traits\HasNameTrait;
 
 /**
- * One model of one maker, as a file names it: `anthropic:claude-opus-4-7`.
+ * One model, under the one name a file points at it by: `claude-opus-5`.
  *
- * No app declares it: unlike an agent, it comes from the list the package
- * ships and is seeded rather than projected. Its identity still derives from
- * the reference, so a catalogue seeded twice holds one row per model, not two.
+ * That name is opaque. Nothing splits it to find the maker or the identifier
+ * the vendor's own API answers to, because both are fields of their own here —
+ * a maker names its range as it pleases, and pins dated snapshots it later
+ * bumps, so a name taken apart is a name that breaks at the next release.
+ *
+ * No app declares it: unlike an agent, it comes from the list the package ships
+ * and is seeded rather than projected. Its identity derives from the name, so a
+ * catalogue seeded twice holds one record per model, not two.
  */
 #[ORM\Entity(repositoryClass: ModelRepository::class)]
 #[ORM\Table(name: 'ai_model')]
-#[ORM\UniqueConstraint(columns: ['provider', 'name'])]
+#[ORM\UniqueConstraint(columns: ['name'])]
 class Model extends AbstractEntity
 {
     public const ID_NAMESPACE = 'c1f0a4d2-8e5b-5f37-b2a4-9d6e0c7b1a83';
 
-    public const REFERENCE_SEPARATOR = ':';
-
     use HasNameTrait;
 
+    /** Who builds it: `anthropic`, `openai`. Shown, never dispatched on. */
+    #[ORM\Column(type: Types::STRING, length: 255)]
+    protected string $maker;
+
     /**
-     * Who makes it: `anthropic`, `openai`. Not who serves it — the same model
-     * is reached through several of them, and that is the runner's question.
+     * The identifier the vendor's API answers to, which is the only form that
+     * ever goes on the wire — dated where the vendor pins snapshots.
      */
     #[ORM\Column(type: Types::STRING, length: 255)]
-    protected string $provider;
+    protected string $apiId;
 
     public function __construct(
-        string $provider,
-        string $name
+        string $name,
+        string $maker,
+        string $apiId
     ) {
         parent::__construct();
 
-        $this->provider = $provider;
         $this->name = $name;
+        $this->maker = $maker;
+        $this->apiId = $apiId;
 
-        $this->setId(self::idFor($this->getReference()));
+        $this->setId(self::idFor($name));
     }
 
-    /**
-     * @param string $reference as a file writes it, `provider:name`
-     */
-    public static function fromReference(string $reference): self
+    public static function idFor(string $name): Uuid
     {
-        [$provider, $name] = explode(self::REFERENCE_SEPARATOR, $reference, 2);
-
-        return new self($provider, $name);
+        return Uuid::v5(Uuid::fromString(self::ID_NAMESPACE), $name);
     }
 
-    public static function idFor(string $reference): Uuid
+    public function getMaker(): string
     {
-        return Uuid::v5(Uuid::fromString(self::ID_NAMESPACE), $reference);
+        return $this->maker;
     }
 
-    /**
-     * What a file names the model by, and what an agent points at.
-     */
-    public function getReference(): string
+    public function getApiId(): string
     {
-        return $this->provider.self::REFERENCE_SEPARATOR.$this->name;
-    }
-
-    public function getProvider(): string
-    {
-        return $this->provider;
+        return $this->apiId;
     }
 }

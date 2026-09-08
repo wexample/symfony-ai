@@ -1,4 +1,4 @@
 page_title: Model
 field:
-  provider: Maker
-  name: Name
+  maker: Maker
+  api_id: API id

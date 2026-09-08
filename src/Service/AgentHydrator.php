@@ -7,7 +7,7 @@ use Wexample\SymfonyAi\Entity\Model;
 use Wexample\SymfonyAi\Repository\ModelRepository;
 
 /**
- * Translates an agent between a plain array and its row, both ways.
+ * Translates an agent between a plain array and its record, both ways.
  *
  * Where that array is read from and written to is not known here: a caller
  * holding a file, a payload or a fixture passes the same thing.
@@ -41,18 +41,18 @@ final readonly class AgentHydrator
     {
         return [
             self::KEY_DESCRIPTION => $agent->getDescription(),
-            self::KEY_MODEL => $agent->getModel()?->getReference(),
+            self::KEY_MODEL => $agent->getModel()?->getName(),
         ];
     }
 
     /**
-     * The model that reference names, or null when the catalogue holds no such
+     * The model that name points at, or null when the catalogue holds no such
      * model: an agent naming one that is gone is still an agent.
      */
-    private function model(?string $reference): ?Model
+    private function model(?string $name): ?Model
     {
-        return $reference
-            ? $this->modelRepository->find(Model::idFor($reference))
+        return $name
+            ? $this->modelRepository->find(Model::idFor($name))
             : null;
     }
 }
