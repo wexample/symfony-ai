@@ -1,0 +1,27 @@
+{%- extends '@front/layouts/private/layout.html.twig' -%}
+
+{%- block page_body -%}
+    <h1>{{ '@page::page_title' | trans }}</h1>
+
+    {{ table(
+        [
+            { key: 'name', label: '@page::column.name' | trans },
+            { key: 'model', label: '@page::column.model' | trans },
+            { key: 'path', label: '@page::column.path' | trans },
+            { key: 'actions', label: '', cell: 'actions', class: 'table--cell--fit' },
+        ],
+        agents|map(agent => {
+            name: agent.name,
+            model: agent.model ? agent.model.reference : '',
+            path: agent.path,
+            actions: [
+                {
+                    icon: 'ph:bold/eye',
+                    href: path('entity_agent_show', { id: agent.id }),
+                    target: 'modal',
+                },
+            ],
+        }),
+        { empty_label: '@page::empty' | trans }
+    ) }}
+{%- endblock -%}

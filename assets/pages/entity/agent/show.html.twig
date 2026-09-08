@@ -1,0 +1,16 @@
+{%- extends '@front/layouts/private/layout.html.twig' -%}
+
+{%- block page_body -%}
+    <div class="block block--padded block--vertical">
+        <h2>{{ agent.name }}</h2>
+
+        {%- include '@WexampleSymfonyDesignSystemBundle/partials/properties.html.twig' with {
+            class: 'properties properties--bordered',
+            items: [
+                { key: '@page::field.description' | trans, value: agent.description },
+                { key: '@page::field.model' | trans, value: agent.model ? agent.model.reference : '' },
+                { key: '@page::field.path' | trans, value: agent.path },
+            ],
+        } only -%}
+    </div>
+{%- endblock -%}

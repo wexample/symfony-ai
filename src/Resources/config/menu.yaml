@@ -1,3 +1,4 @@
 menu:
   main:
+    entity_agent_index: Agents
     entity_model_index: Models
