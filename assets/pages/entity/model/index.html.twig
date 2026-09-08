@@ -1,0 +1,28 @@
+{#- The design system's layouts ship their stylesheets as partials, so a page
+    extending one directly gets the markup and none of the paint. The host app's
+    layout is the built entry, and it is what every page of the board extends. -#}
+{%- extends '@front/layouts/private/layout.html.twig' -%}
+
+{%- block page_body -%}
+    <h1>{{ '@page::page_title' | trans }}</h1>
+
+    {{ table(
+        [
+            { key: 'provider', label: '@page::column.provider' | trans },
+            { key: 'name', label: '@page::column.name' | trans },
+            { key: 'actions', label: '', cell: 'actions', class: 'table--cell--fit' },
+        ],
+        models|map(model => {
+            provider: model.provider,
+            name: model.name,
+            actions: [
+                {
+                    icon: 'ph:bold/eye',
+                    href: path('entity_model_show', { id: model.id }),
+                    target: 'modal',
+                },
+            ],
+        }),
+        { empty_label: '@page::empty' | trans }
+    ) }}
+{%- endblock -%}

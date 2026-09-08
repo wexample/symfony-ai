@@ -1,0 +1,15 @@
+{%- extends '@front/layouts/private/layout.html.twig' -%}
+
+{%- block page_body -%}
+    <div class="block block--padded block--vertical">
+        <h2>{{ model.reference }}</h2>
+
+        <dl>
+            <dt>{{ '@page::field.provider' | trans }}</dt>
+            <dd>{{ model.provider }}</dd>
+
+            <dt>{{ '@page::field.name' | trans }}</dt>
+            <dd>{{ model.name }}</dd>
+        </dl>
+    </div>
+{%- endblock -%}
