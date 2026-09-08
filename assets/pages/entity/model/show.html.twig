@@ -4,12 +4,12 @@
     <div class="block block--padded block--vertical">
         <h2>{{ model.reference }}</h2>
 
-        <dl>
-            <dt>{{ '@page::field.provider' | trans }}</dt>
-            <dd>{{ model.provider }}</dd>
-
-            <dt>{{ '@page::field.name' | trans }}</dt>
-            <dd>{{ model.name }}</dd>
-        </dl>
+        {%- include '@WexampleSymfonyDesignSystemBundle/partials/properties.html.twig' with {
+            class: 'properties properties--bordered',
+            items: [
+                { key: '@page::field.provider' | trans, value: model.provider, html: false },
+                { key: '@page::field.name' | trans, value: model.name, html: false },
+            ],
+        } only -%}
     </div>
 {%- endblock -%}
