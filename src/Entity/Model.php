@@ -10,11 +10,11 @@ use Wexample\SymfonyHelpers\Entity\AbstractEntity;
 use Wexample\SymfonyHelpers\Entity\Traits\HasNameTrait;
 
 /**
- * One model of one provider, as a file names it: `claude:opus-5`.
+ * One model of one maker, as a file names it: `anthropic:claude-opus-4-7`.
  *
- * Nothing in a repository describes it, so unlike an agent it has no file and
- * the row owns it. Its identity is still derived from the reference, so a
- * catalogue seeded twice holds one row per model rather than two.
+ * No app declares it: unlike an agent, it comes from the list the package
+ * ships and is seeded rather than projected. Its identity still derives from
+ * the reference, so a catalogue seeded twice holds one row per model, not two.
  */
 #[ORM\Entity(repositoryClass: ModelRepository::class)]
 #[ORM\Table(name: 'ai_model')]
@@ -27,7 +27,10 @@ class Model extends AbstractEntity
 
     use HasNameTrait;
 
-    /** Who serves it: `claude`, `openai`, `mistral`. */
+    /**
+     * Who makes it: `anthropic`, `openai`. Not who serves it — the same model
+     * is reached through several of them, and that is the runner's question.
+     */
     #[ORM\Column(type: Types::STRING, length: 255)]
     protected string $provider;
 
