@@ -1,5 +1,6 @@
 {
   "name": "wexample/symfony-ai",
+  "description": "Agents and models as Symfony entities",
   "version": "1.0.3",
   "type": "library",
   "license": "MIT",
@@ -7,5 +8,18 @@
     "psr-4": {
       "Wexample\\SymfonyAi\\": "src/"
     }
+  },
+  "authors": [
+    {
+      "name": "weeger",
+      "email": "romain.weeger@wexample.com"
+    }
+  ],
+  "require": {
+    "php": ">=8.2",
+    "doctrine/orm": "^3.0",
+    "symfony/uid": ">=6.2",
+    "wexample/symfony-api": ">=4.0.0",
+    "wexample/symfony-helpers": ">=7.0.0"
   }
 }
