@@ -1,0 +1,8 @@
+domain: symfony-ai.wex
+global:
+  name: symfony-ai
+  type: php-symfony
+  version: 1.0.0
+wex:
+  migration: 1
+  version: 6.0.135
