@@ -20,10 +20,9 @@ use Wexample\SymfonyHelpers\Entity\Traits\HasNameTrait;
 #[ORM\Table(name: 'ai_agent')]
 class Agent extends AbstractEntity
 {
-    public const ID_NAMESPACE = '5d2b8c40-31a7-5e69-8f14-6c0b93ae27d5';
-
     use HasDescriptionTrait;
     use HasNameTrait;
+    public const ID_NAMESPACE = '5d2b8c40-31a7-5e69-8f14-6c0b93ae27d5';
 
     /** The file the agent is declared in, which is what tells it apart. */
     #[ORM\Column(type: 'string', length: 255, unique: true)]

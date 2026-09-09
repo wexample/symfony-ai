@@ -26,9 +26,8 @@ use Wexample\SymfonyHelpers\Entity\Traits\HasNameTrait;
 #[ORM\UniqueConstraint(columns: ['name'])]
 class Model extends AbstractEntity
 {
-    public const ID_NAMESPACE = 'c1f0a4d2-8e5b-5f37-b2a4-9d6e0c7b1a83';
-
     use HasNameTrait;
+    public const ID_NAMESPACE = 'c1f0a4d2-8e5b-5f37-b2a4-9d6e0c7b1a83';
 
     /** Who builds it: `anthropic`, `openai`. Shown, never dispatched on. */
     #[ORM\Column(type: Types::STRING, length: 255)]
