@@ -35,6 +35,14 @@ export default {
       };
     },
 
+    getPageLength() {
+      return 20;
+    },
+
+    startsAtLastPage() {
+      return true;
+    },
+
     // A message has no author of its own: who spoke is its type, and the label
     // is all the reader ever sees of it.
     getMessageAuthor(entity) {
@@ -51,6 +59,10 @@ export default {
 
     getMessageIcon(entity) {
       return ICON_BY_TYPE[entity.type] ?? ICON_BY_TYPE.user;
+    },
+
+    getMessageVariant(entity) {
+      return entity.type;
     },
 
     buildMessageEntity(content) {

@@ -8,7 +8,8 @@ use Wexample\SymfonyHelpers\Entity\AbstractEntity;
 
 class MessageDto extends AbstractEntityDto
 {
-    public string $sessionId;
+    /** Named after the property of the entity, which is what the browser checks against. */
+    public string $session;
 
     /** `user`, `assistant` or `system`. */
     public ?string $type;
@@ -28,7 +29,7 @@ class MessageDto extends AbstractEntityDto
     {
         $dto = parent::fromEntity($entity);
 
-        $dto->sessionId = (string) $entity->getSession()->getId();
+        $dto->session = (string) $entity->getSession()->getId();
         $dto->type = $entity->getType();
         $dto->body = $entity->getBody();
         $dto->dateCreated = $entity->getDateCreated()?->format(DATE_ATOM);

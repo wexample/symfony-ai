@@ -6,3 +6,11 @@ services:
 
     Wexample\SymfonyAi\:
         resource: '../../{Controller,Form,Repository,Service}'
+
+    Wexample\SymfonyAi\Api\Controller\:
+        resource: '../../Api/Controller/*'
+        tags: ['controller.service_arguments']
+
+    Wexample\SymfonyAi\Api\Normalizer\:
+        resource: '../../Api/Normalizer/*'
+        tags: ['serializer.normalizer']

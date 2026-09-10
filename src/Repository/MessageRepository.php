@@ -2,6 +2,7 @@
 
 namespace Wexample\SymfonyAi\Repository;
 
+use Doctrine\ORM\QueryBuilder;
 use Wexample\SymfonyAi\Entity\Message;
 use Wexample\SymfonyAi\Entity\Session;
 use Wexample\SymfonyAi\Entity\Traits\Manipulator\MessageEntityManipulatorTrait;
@@ -28,6 +29,16 @@ class MessageRepository extends AbstractRepository
             ['session' => $session],
             ['dateCreated' => self::SORT_ASC]
         );
+    }
+
+    /**
+     * The same conversation, for a reader taking it a page at a time.
+     */
+    public function queryBySessionOldestFirst(Session $session): QueryBuilder
+    {
+        return $this
+            ->queryByField('session', $session)
+            ->orderBy($this->getEntityQueryAlias().'.dateCreated', self::SORT_ASC);
     }
 
     /**
