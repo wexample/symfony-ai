@@ -6,6 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Uid\Uuid;
 use Wexample\Pseudocode\Attribute\PseudocodeExport;
 use Wexample\SymfonyAi\Repository\AgentRepository;
+use Wexample\SymfonyApi\Attribute\ApiEntity;
 use Wexample\SymfonyHelpers\Entity\AbstractEntity;
 use Wexample\SymfonyHelpers\Entity\Traits\HasDescriptionTrait;
 use Wexample\SymfonyHelpers\Entity\Traits\HasNameTrait;
@@ -18,9 +19,10 @@ use Wexample\SymfonyHelpers\Entity\Traits\HasNameTrait;
  * the record takes that uuid, an agent renamed or moved stays the same agent,
  * and a declaration that is gone leaves no record behind.
  */
+#[ApiEntity]
 #[PseudocodeExport(inherited: true)]
 #[ORM\Entity(repositoryClass: AgentRepository::class)]
-#[ORM\Table(name: 'ai_agent')]
+#[ORM\Table(name: 'agent')]
 class Agent extends AbstractEntity
 {
     use HasDescriptionTrait;

@@ -5,7 +5,9 @@ namespace Wexample\SymfonyAi\Entity;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Uid\Uuid;
+use Wexample\Pseudocode\Attribute\PseudocodeExport;
 use Wexample\SymfonyAi\Repository\ModelRepository;
+use Wexample\SymfonyApi\Attribute\ApiEntity;
 use Wexample\SymfonyHelpers\Entity\AbstractEntity;
 use Wexample\SymfonyHelpers\Entity\Traits\HasNameTrait;
 
@@ -21,8 +23,10 @@ use Wexample\SymfonyHelpers\Entity\Traits\HasNameTrait;
  * and is seeded rather than projected. Its identity derives from the name, so a
  * catalogue seeded twice holds one record per model, not two.
  */
+#[ApiEntity]
+#[PseudocodeExport(inherited: true)]
 #[ORM\Entity(repositoryClass: ModelRepository::class)]
-#[ORM\Table(name: 'ai_model')]
+#[ORM\Table(name: 'model')]
 #[ORM\UniqueConstraint(columns: ['name'])]
 class Model extends AbstractEntity
 {
