@@ -16,7 +16,7 @@
     }
   ],
   "require": {
-    "php": ">=8.2",
+    "php": ">=8.5",
     "doctrine/orm": "^3.0",
     "symfony/uid": ">=6.2",
     "wexample/php-pseudocode": ">=1.0.0",
@@ -25,5 +25,10 @@
     "wexample/symfony-forms": ">=3.0.0",
     "wexample/symfony-helpers": ">=7.0.0",
     "wexample/symfony-pseudocode": ">=2.0.0"
+  },
+  "extra": {
+    "install": {
+      "bundle_env": "all"
+    }
   }
 }
