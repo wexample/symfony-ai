@@ -1,0 +1,160 @@
+items:
+  - name: Message
+    type: class
+    description: "One turn of a conversation: who spoke, what was said, when.\nOnly what every engine has. A provider's own transcript says a great deal\nmore — Claude's holds titles, queue operations and a parent link per line —\nand none of it survives a change of provider, so none of it is stored here.\n`providerMessageIdentifier` is the one thread back to the original."
+    properties:
+      - name: id
+        type: Symfony\Component\Uid\Uuid
+      - name: body
+        type: string
+        nullable: true
+        default: null
+      - name: dateCreated
+        type: DateTimeInterface
+        nullable: true
+        default: null
+      - name: type
+        type: string
+        nullable: true
+        default: null
+      - name: session
+        type: Session
+      - name: providerMessageIdentifier
+        type: string
+        nullable: true
+        default: null
+      - name: tokens
+        type: int
+        nullable: true
+        default: null
+    methods:
+      - type: method
+        name: buildEntityPath
+        parameters:
+          - type: string
+            name: className
+        return:
+          type: string
+      - type: method
+        name: getEntityKeyName
+        return:
+          type: string
+      - type: method
+        name: getEntityShortName
+        return:
+          type: string
+      - type: method
+        name: getId
+        return:
+          type: Symfony\Component\Uid\Uuid
+      - type: method
+        name: setId
+        parameters:
+          - type: Symfony\Component\Uid\Uuid
+            name: id
+        return:
+          type: void
+      - type: method
+        name: getTableizedName
+        return:
+          type: string
+      - type: method
+        name: getCamelName
+        return:
+          type: string
+      - type: method
+        name: getBody
+        return:
+          type: string
+      - type: method
+        name: setBody
+        parameters:
+          - type: string
+            name: body
+        return:
+          type: self
+      - type: method
+        name: getDateCreated
+        return:
+          type: DateTimeInterface
+      - type: method
+        name: setDateCreatedNow
+        return:
+          type: self
+      - type: method
+        name: setDateCreated
+        parameters:
+          - type: DateTimeInterface
+            name: dateCreated
+        return:
+          type: self
+      - type: method
+        name: hasSomeType
+        parameters:
+          - type: array
+            name: types
+        return:
+          type: bool
+      - type: method
+        name: getType
+        return:
+          type: string
+      - type: method
+        name: setType
+        parameters:
+          - type: string
+            name: type
+        return:
+          type: void
+      - type: method
+        name: isOfType
+        parameters:
+          - type: string
+            name: type
+        return:
+          type: bool
+      - type: method
+        name: checkAllowedOrFail
+        parameters:
+          - type: mixed
+            name: value
+          - type: array
+            name: allowed
+        return:
+          type: void
+      - type: method
+        name: __construct
+        parameters:
+          - type: Session
+            name: session
+      - type: method
+        name: getAllowedTypes
+        description: ''
+        return:
+          type: array
+      - type: method
+        name: getSession
+        return:
+          type: Session
+      - type: method
+        name: getProviderMessageIdentifier
+        return:
+          type: string
+      - type: method
+        name: setProviderMessageIdentifier
+        parameters:
+          - type: string
+            name: providerMessageIdentifier
+        return:
+          type: self
+      - type: method
+        name: getTokens
+        return:
+          type: int
+      - type: method
+        name: setTokens
+        parameters:
+          - type: int
+            name: tokens
+        return:
+          type: self

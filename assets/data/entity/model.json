@@ -1,0 +1,160 @@
+{
+    "name": "model",
+    "type": "class",
+    "description": "One model, under the one name a file points at it by: `claude-opus-5`.\nThat name is opaque. Nothing splits it to find the maker or the identifier\nthe vendor's own API answers to, because both are fields of their own here —\na maker names its range as it pleases, and pins dated snapshots it later\nbumps, so a name taken apart is a name that breaks at the next release.\nNo app declares it: unlike an agent, it comes from the list the package ships\nand is seeded rather than projected. Its identity derives from the name, so a\ncatalogue seeded twice holds one record per model, not two.",
+    "properties": [
+        {
+            "name": "id",
+            "type": "Symfony\\Component\\Uid\\Uuid"
+        },
+        {
+            "name": "name",
+            "type": "string",
+            "nullable": true,
+            "default": null
+        },
+        {
+            "name": "maker",
+            "type": "string"
+        },
+        {
+            "name": "apiId",
+            "type": "string"
+        }
+    ],
+    "methods": [
+        {
+            "type": "method",
+            "name": "buildEntityPath",
+            "parameters": [
+                {
+                    "type": "string",
+                    "name": "className"
+                }
+            ],
+            "return": {
+                "type": "string"
+            }
+        },
+        {
+            "type": "method",
+            "name": "getEntityKeyName",
+            "return": {
+                "type": "string"
+            }
+        },
+        {
+            "type": "method",
+            "name": "getEntityShortName",
+            "return": {
+                "type": "string"
+            }
+        },
+        {
+            "type": "method",
+            "name": "getId",
+            "return": {
+                "type": "Symfony\\Component\\Uid\\Uuid"
+            }
+        },
+        {
+            "type": "method",
+            "name": "setId",
+            "parameters": [
+                {
+                    "type": "Symfony\\Component\\Uid\\Uuid",
+                    "name": "id"
+                }
+            ],
+            "return": {
+                "type": "void"
+            }
+        },
+        {
+            "type": "method",
+            "name": "getTableizedName",
+            "return": {
+                "type": "string"
+            }
+        },
+        {
+            "type": "method",
+            "name": "getCamelName",
+            "return": {
+                "type": "string"
+            }
+        },
+        {
+            "type": "method",
+            "name": "getName",
+            "return": {
+                "type": "string"
+            }
+        },
+        {
+            "type": "method",
+            "name": "setName",
+            "parameters": [
+                {
+                    "type": "string",
+                    "name": "name"
+                }
+            ],
+            "return": {
+                "type": "self"
+            }
+        },
+        {
+            "type": "method",
+            "name": "setNameFromTitle",
+            "return": {
+                "type": "self"
+            }
+        },
+        {
+            "type": "method",
+            "name": "__construct",
+            "parameters": [
+                {
+                    "type": "string",
+                    "name": "name"
+                },
+                {
+                    "type": "string",
+                    "name": "maker"
+                },
+                {
+                    "type": "string",
+                    "name": "apiId"
+                }
+            ]
+        },
+        {
+            "type": "method",
+            "name": "idFor",
+            "parameters": [
+                {
+                    "type": "string",
+                    "name": "name"
+                }
+            ],
+            "return": {
+                "type": "Uuid"
+            }
+        },
+        {
+            "type": "method",
+            "name": "getMaker",
+            "return": {
+                "type": "string"
+            }
+        },
+        {
+            "type": "method",
+            "name": "getApiId",
+            "return": {
+                "type": "string"
+            }
+        }
+    ]
+}

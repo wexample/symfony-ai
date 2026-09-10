@@ -1,0 +1,178 @@
+items:
+  - name: Session
+    type: class
+    description: "One conversation held in the app, projected from its record file.\nEverything about the conversation except the messages: who ran it, what it\nwas called, where it got to. The transcript belongs to the engine and stays\nout — `sdkId` is the thread back to it.\nLike an agent, the record is named by its own identity — `<uuid>.yml` — so\nthe row takes that uuid and a file that is gone leaves no row behind."
+    properties:
+      - name: id
+        type: Symfony\Component\Uid\Uuid
+      - name: path
+        type: string
+      - name: agent
+        type: Agent
+        nullable: true
+        default: null
+      - name: agentName
+        type: string
+      - name: name
+        type: string
+        nullable: true
+        default: null
+      - name: model
+        type: Model
+        nullable: true
+        default: null
+      - name: turnCount
+        type: int
+        default: 0
+      - name: dateCreated
+        type: DateTimeInterface
+        nullable: true
+        default: null
+      - name: dateLastMessage
+        type: DateTimeInterface
+        nullable: true
+        default: null
+      - name: sdkId
+        type: string
+        nullable: true
+        default: null
+    methods:
+      - type: method
+        name: buildEntityPath
+        parameters:
+          - type: string
+            name: className
+        return:
+          type: string
+      - type: method
+        name: getEntityKeyName
+        return:
+          type: string
+      - type: method
+        name: getEntityShortName
+        return:
+          type: string
+      - type: method
+        name: getId
+        return:
+          type: Symfony\Component\Uid\Uuid
+      - type: method
+        name: setId
+        parameters:
+          - type: Symfony\Component\Uid\Uuid
+            name: id
+        return:
+          type: void
+      - type: method
+        name: getTableizedName
+        return:
+          type: string
+      - type: method
+        name: getCamelName
+        return:
+          type: string
+      - type: method
+        name: __construct
+        parameters:
+          - type: string
+            name: path
+      - type: method
+        name: idFor
+        description: 'The identity the record is named by, read straight off the file name.'
+        parameters:
+          - type: string
+            name: path
+        return:
+          type: Uuid
+      - type: method
+        name: getPath
+        return:
+          type: string
+      - type: method
+        name: getAgent
+        return:
+          type: Agent
+      - type: method
+        name: setAgent
+        parameters:
+          - type: Agent
+            name: agent
+        return:
+          type: self
+      - type: method
+        name: getAgentName
+        return:
+          type: string
+      - type: method
+        name: setAgentName
+        parameters:
+          - type: string
+            name: agentName
+        return:
+          type: self
+      - type: method
+        name: getName
+        return:
+          type: string
+      - type: method
+        name: setName
+        parameters:
+          - type: string
+            name: name
+        return:
+          type: self
+      - type: method
+        name: getModel
+        return:
+          type: Model
+      - type: method
+        name: setModel
+        parameters:
+          - type: Model
+            name: model
+        return:
+          type: self
+      - type: method
+        name: getTurnCount
+        return:
+          type: int
+      - type: method
+        name: setTurnCount
+        parameters:
+          - type: int
+            name: turnCount
+        return:
+          type: self
+      - type: method
+        name: getDateCreated
+        return:
+          type: DateTimeInterface
+      - type: method
+        name: setDateCreated
+        parameters:
+          - type: DateTimeInterface
+            name: dateCreated
+        return:
+          type: self
+      - type: method
+        name: getDateLastMessage
+        return:
+          type: DateTimeInterface
+      - type: method
+        name: setDateLastMessage
+        parameters:
+          - type: DateTimeInterface
+            name: dateLastMessage
+        return:
+          type: self
+      - type: method
+        name: getSdkId
+        return:
+          type: string
+      - type: method
+        name: setSdkId
+        parameters:
+          - type: string
+            name: sdkId
+        return:
+          type: self

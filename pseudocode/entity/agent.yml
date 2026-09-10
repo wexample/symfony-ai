@@ -1,0 +1,110 @@
+items:
+  - name: Agent
+    type: class
+    description: "An agent an app declares, projected into a record.\nThe file owns what it says: this record is rebuilt from it and never written\nback to it. The declaration is named by its own identity — `<uuid>.yml` — so\nthe record takes that uuid, an agent renamed or moved stays the same agent,\nand a declaration that is gone leaves no record behind."
+    properties:
+      - name: id
+        type: Symfony\Component\Uid\Uuid
+      - name: description
+        type: string
+        nullable: true
+        default: null
+      - name: name
+        type: string
+        nullable: true
+        default: null
+      - name: path
+        type: string
+      - name: model
+        type: Model
+        nullable: true
+        default: null
+    methods:
+      - type: method
+        name: buildEntityPath
+        parameters:
+          - type: string
+            name: className
+        return:
+          type: string
+      - type: method
+        name: getEntityKeyName
+        return:
+          type: string
+      - type: method
+        name: getEntityShortName
+        return:
+          type: string
+      - type: method
+        name: getId
+        return:
+          type: Symfony\Component\Uid\Uuid
+      - type: method
+        name: setId
+        parameters:
+          - type: Symfony\Component\Uid\Uuid
+            name: id
+        return:
+          type: void
+      - type: method
+        name: getTableizedName
+        return:
+          type: string
+      - type: method
+        name: getCamelName
+        return:
+          type: string
+      - type: method
+        name: getDescription
+        return:
+          type: string
+      - type: method
+        name: setDescription
+        parameters:
+          - type: string
+            name: description
+        return:
+          type: self
+      - type: method
+        name: getName
+        return:
+          type: string
+      - type: method
+        name: setName
+        parameters:
+          - type: string
+            name: name
+        return:
+          type: self
+      - type: method
+        name: setNameFromTitle
+        return:
+          type: self
+      - type: method
+        name: __construct
+        parameters:
+          - type: string
+            name: path
+      - type: method
+        name: idFor
+        description: 'The identity the declaration is named by, read straight off the file name.'
+        parameters:
+          - type: string
+            name: path
+        return:
+          type: Uuid
+      - type: method
+        name: getPath
+        return:
+          type: string
+      - type: method
+        name: getModel
+        return:
+          type: Model
+      - type: method
+        name: setModel
+        parameters:
+          - type: Model
+            name: model
+        return:
+          type: self
