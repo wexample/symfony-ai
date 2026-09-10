@@ -31,6 +31,23 @@ class SessionRepository extends AbstractRepository
     }
 
     /**
+     * The conversations held inside one app, the one last spoken to first. What
+     * ties a session to an app is the record it was read from, which lies inside
+     * it.
+     *
+     * @return Session[]
+     */
+    public function findByPathPrefix(string $prefix): array
+    {
+        return $this->createQueryBuilder('session')
+            ->where('session.path LIKE :prefix')
+            ->setParameter('prefix', addcslashes($prefix, '%_\\').'/%')
+            ->orderBy('session.dateLastMessage', self::SORT_DESC)
+            ->getQuery()
+            ->getResult();
+    }
+
+    /**
      * The conversations held under a qualified agent name, which is the only
      * handle on an agent a package ships: that one is code, so it has no record
      * to relate to.
