@@ -9,6 +9,7 @@ use Symfony\Component\Uid\Uuid;
 use Wexample\Pseudocode\Attribute\PseudocodeExport;
 use Wexample\SymfonyAi\Repository\SessionRepository;
 use Wexample\SymfonyApi\Attribute\ApiEntity;
+use Wexample\SymfonyForms\Attribute\EntityForm;
 use Wexample\SymfonyHelpers\Entity\AbstractEntity;
 
 /**
@@ -22,6 +23,7 @@ use Wexample\SymfonyHelpers\Entity\AbstractEntity;
  * the row takes that uuid and a file that is gone leaves no row behind.
  */
 #[ApiEntity]
+#[EntityForm]
 #[PseudocodeExport(inherited: true)]
 #[ORM\Entity(repositoryClass: SessionRepository::class)]
 #[ORM\Table(name: 'session')]

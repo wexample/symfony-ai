@@ -1,0 +1,10 @@
+field:
+  name:
+    label: Name
+    help: What to call this conversation, so it can be told from the others.
+
+action:
+  submit: Save
+
+success:
+  message: Session saved
