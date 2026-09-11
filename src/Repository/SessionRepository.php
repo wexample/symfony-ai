@@ -18,6 +18,17 @@ class SessionRepository extends AbstractRepository
     use SessionEntityManipulatorTrait;
 
     /**
+     * A conversation read from the record sitting at that path.
+     *
+     * Nothing else is set: the record says what the session is, so whoever
+     * wrote it hydrates the row from the file rather than from memory.
+     */
+    public function createNewSession(string $path): Session
+    {
+        return new Session($path);
+    }
+
+    /**
      * The conversations one agent held, the one last spoken to first.
      *
      * @return Session[]
