@@ -31,7 +31,9 @@ class Message extends AbstractEntity
     use HasTypeTrait;
 
     public const TYPE_ASSISTANT = 'assistant';
+    public const TYPE_ERROR = 'error';
     public const TYPE_SYSTEM = 'system';
+    public const TYPE_TOOL = 'tool';
     public const TYPE_USER = 'user';
 
     /**
@@ -66,7 +68,9 @@ class Message extends AbstractEntity
     {
         return [
             self::TYPE_ASSISTANT,
+            self::TYPE_ERROR,
             self::TYPE_SYSTEM,
+            self::TYPE_TOOL,
             self::TYPE_USER,
         ];
     }

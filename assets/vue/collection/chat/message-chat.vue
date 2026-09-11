@@ -4,7 +4,9 @@ import Message from '../../../Entity/Message';
 
 const ICON_BY_TYPE = {
   assistant: 'ph:bold/robot',
+  error: 'ph:bold/warning-circle',
   system: 'ph:bold/gear',
+  tool: 'ph:bold/wrench',
   user: 'ph:bold/user'
 };
 

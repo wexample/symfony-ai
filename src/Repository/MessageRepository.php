@@ -97,4 +97,26 @@ class MessageRepository extends AbstractRepository
     {
         return $this->findOneBy(['providerMessageIdentifier' => $identifier]);
     }
+
+    /**
+     * A message written before any transcript confirmed it, waiting for the line
+     * that says the same thing.
+     *
+     * What an application writes when someone speaks is a guess: the turn has not
+     * run, so the provider has named nothing yet. Matching on what was said is
+     * the only handle there is, and it is enough — the same words twice in one
+     * conversation still describe the same turn.
+     */
+    public function findOneUnconfirmed(
+        Session $session,
+        string $type,
+        string $body,
+    ): ?Message {
+        return $this->findOneBy([
+            'session' => $session,
+            'type' => $type,
+            'body' => $body,
+            'providerMessageIdentifier' => null,
+        ]);
+    }
 }

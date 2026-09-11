@@ -1,4 +1,6 @@
 author:
   assistant: Assistant
+  error: Error
   system: System
+  tool: Tool
   user: You
