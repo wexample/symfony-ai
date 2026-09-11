@@ -11,6 +11,8 @@ use Wexample\SymfonyAi\Repository\SessionRepository;
 use Wexample\SymfonyApi\Attribute\ApiEntity;
 use Wexample\SymfonyForms\Attribute\EntityForm;
 use Wexample\SymfonyHelpers\Entity\AbstractEntity;
+use Wexample\SymfonyLive\Attribute\LiveEntity;
+use Wexample\SymfonyLive\Enum\LiveTopicAction;
 
 /**
  * One conversation held in the app, projected from its record file.
@@ -24,6 +26,7 @@ use Wexample\SymfonyHelpers\Entity\AbstractEntity;
  */
 #[ApiEntity]
 #[EntityForm]
+#[LiveEntity(actions: [LiveTopicAction::EVENT])]
 #[PseudocodeExport(inherited: true)]
 #[ORM\Entity(repositoryClass: SessionRepository::class)]
 #[ORM\Table(name: 'session')]

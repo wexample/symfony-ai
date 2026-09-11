@@ -8,6 +8,9 @@ const ICON_BY_TYPE = {
   user: 'ph:bold/user'
 };
 
+// What the server publishes on the session's topic when a turn is written.
+const EVENT_MESSAGE_CREATED = 'message-created';
+
 export default {
   extends: AbstractEntityChat,
 
@@ -65,12 +68,21 @@ export default {
       return entity.type;
     },
 
+    // Who spoke is not sent: the endpoint knows a turn arriving from here was
+    // spoken by the operator, and refuses anything else in the payload.
     buildMessageEntity(content) {
       return new Message({
         session: this.sessionId,
-        type: 'user',
         body: content
       });
+    },
+
+    getLiveThread() {
+      return {
+        entityName: 'session',
+        id: this.sessionId,
+        event: EVENT_MESSAGE_CREATED
+      };
     }
   }
 };

@@ -5,7 +5,7 @@ services:
         public: false
 
     Wexample\SymfonyAi\:
-        resource: '../../{Controller,Form,Repository,Service}'
+        resource: '../../{Controller,EventListener,Form,Repository,Service}'
 
     Wexample\SymfonyAi\Api\Controller\:
         resource: '../../Api/Controller/*'

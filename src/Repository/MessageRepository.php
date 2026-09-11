@@ -3,9 +3,12 @@
 namespace Wexample\SymfonyAi\Repository;
 
 use Doctrine\ORM\QueryBuilder;
+use Doctrine\Persistence\ManagerRegistry;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 use Wexample\SymfonyAi\Entity\Message;
 use Wexample\SymfonyAi\Entity\Session;
 use Wexample\SymfonyAi\Entity\Traits\Manipulator\MessageEntityManipulatorTrait;
+use Wexample\SymfonyAi\Event\MessageCreatedEvent;
 use Wexample\SymfonyHelpers\Repository\AbstractRepository;
 
 /**
@@ -13,10 +16,55 @@ use Wexample\SymfonyHelpers\Repository\AbstractRepository;
  * @method Message|null findOneBy(array $criteria, array $orderBy = null)
  * @method Message[]    findAll()
  * @method Message[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+ * @method Message      saveNewMessage(Session $session, string $type, string $body)
  */
 class MessageRepository extends AbstractRepository
 {
     use MessageEntityManipulatorTrait;
+
+    public function __construct(
+        ManagerRegistry $registry,
+        private readonly EventDispatcherInterface $eventDispatcher,
+    ) {
+        parent::__construct($registry);
+    }
+
+    public function createNewMessage(
+        Session $session,
+        string $type,
+        string $body,
+    ): Message {
+        $message = new Message($session);
+        $message->setType($type);
+        $message->setBody($body);
+        $message->setDateCreatedNow();
+
+        return $message;
+    }
+
+    /**
+     * Writes a turn, and says so for whoever knows how to answer it.
+     *
+     * The event goes out once the record is written and not before: what
+     * listens to it reads the message back by its identity, from elsewhere.
+     */
+    public function saveNewMessageAndPushEvent(
+        Session $session,
+        string $type,
+        string $body,
+    ): Message {
+        $message = $this->saveNewMessage(
+            $session,
+            $type,
+            $body
+        );
+
+        $this->eventDispatcher->dispatch(
+            new MessageCreatedEvent($message)
+        );
+
+        return $message;
+    }
 
     /**
      * The conversation as it was held, oldest first.

@@ -4,6 +4,7 @@ namespace Wexample\SymfonyAi\Api\Controller\Entity;
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Attribute\Route;
+use Wexample\SymfonyAi\Api\Dto\Entity\Message\CreateMessageDto;
 use Wexample\SymfonyAi\Api\Normalizer\Entity\Message\DefaultMessageNormalizer;
 use Wexample\SymfonyAi\Entity\Message;
 use Wexample\SymfonyAi\Repository\MessageRepository;
@@ -11,6 +12,7 @@ use Wexample\SymfonyAi\Repository\SessionRepository;
 use Wexample\SymfonyApi\Api\Attribute\QueryOption\LengthQueryOption;
 use Wexample\SymfonyApi\Api\Attribute\QueryOption\PageQueryOption;
 use Wexample\SymfonyApi\Api\Attribute\QueryOption\StringQueryOption;
+use Wexample\SymfonyApi\Api\Attribute\ValidateRequestContent;
 use Wexample\SymfonyApi\Api\Class\ApiResponse;
 use Wexample\SymfonyApi\Api\Controller\AbstractApiController;
 use Wexample\SymfonyHelpers\Controller\AbstractController;
@@ -31,36 +33,34 @@ class MessageController extends AbstractApiController
     final public const string ROUTE_LIST = 'list';
 
     /**
-     * Writes a turn spoken by the operator, and nothing else.
+     * Writes a turn spoken by the operator, and says so.
      *
-     * Nothing answers it: what runs the conversation is the engine, and reaching
-     * it is not this endpoint's business. The line is written so the thread keeps
-     * what was typed into it.
+     * Nothing here answers it: what runs the conversation is the engine, and
+     * reaching it is not this endpoint's business. The application that has one
+     * listens to the event, and the line is written whether or not anybody does.
      */
     #[Route(path: 'create', name: self::ROUTE_CREATE, methods: [Request::METHOD_POST], options: AbstractController::ROUTE_OPTIONS_ONLY_EXPOSE)]
+    #[ValidateRequestContent(dto: CreateMessageDto::class, attributeName: 'createMessageDto')]
     public function create(
-        Request $request,
+        CreateMessageDto $createMessageDto,
         MessageRepository $messageRepository,
         SessionRepository $sessionRepository,
         DefaultMessageNormalizer $normalizer,
     ): ApiResponse {
-        $payload = $request->getPayload();
-
-        $session = $sessionRepository->find($payload->getString(self::QUERY_OPTION_SESSION));
+        $session = $sessionRepository->find($createMessageDto->session);
 
         if (! $session) {
             return self::apiResponseError('Unknown session.');
         }
 
-        $message = new Message($session);
-        $message->setType(Message::TYPE_USER);
-        $message->setBody($payload->getString('body'));
-        $message->setDateCreatedNow();
-
-        $messageRepository->save($message);
-
         return self::apiResponseSuccess(
-            data: $normalizer->normalize($message)
+            data: $normalizer->normalize(
+                $messageRepository->saveNewMessageAndPushEvent(
+                    $session,
+                    Message::TYPE_USER,
+                    $createMessageDto->body
+                )
+            )
         );
     }
 
