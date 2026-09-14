@@ -2,6 +2,7 @@
 
 namespace Wexample\SymfonyAi\Repository;
 
+use Doctrine\ORM\QueryBuilder;
 use Wexample\SymfonyAi\Entity\Agent;
 use Wexample\SymfonyAi\Entity\Session;
 use Wexample\SymfonyAi\Entity\Traits\Manipulator\SessionEntityManipulatorTrait;
@@ -35,10 +36,11 @@ class SessionRepository extends AbstractRepository
      */
     public function findByAgent(Agent $agent): array
     {
-        return $this->findBy(
-            ['agent' => $agent],
-            ['dateLastMessage' => self::SORT_DESC]
-        );
+        return $this->queryLastSpokenFirst()
+            ->where('session.agent = :agent')
+            ->setParameter('agent', $agent)
+            ->getQuery()
+            ->getResult();
     }
 
     /**
@@ -50,10 +52,9 @@ class SessionRepository extends AbstractRepository
      */
     public function findByPathPrefix(string $prefix): array
     {
-        return $this->createQueryBuilder('session')
+        return $this->queryLastSpokenFirst()
             ->where('session.path LIKE :prefix')
             ->setParameter('prefix', addcslashes($prefix, '%_\\').'/%')
-            ->orderBy('session.dateLastMessage', self::SORT_DESC)
             ->getQuery()
             ->getResult();
     }
@@ -67,9 +68,26 @@ class SessionRepository extends AbstractRepository
      */
     public function findByAgentName(string $agentName): array
     {
-        return $this->findBy(
-            ['agentName' => $agentName],
-            ['dateLastMessage' => self::SORT_DESC]
-        );
+        return $this->queryLastSpokenFirst()
+            ->where('session.agentName = :agentName')
+            ->setParameter('agentName', $agentName)
+            ->getQuery()
+            ->getResult();
+    }
+
+    /**
+     * The conversations, the one last spoken to first.
+     *
+     * A conversation nobody ever answered has no last message, and falls back on
+     * the moment it was opened — which is the last thing that happened to it.
+     * Without that fallback those rows sort among themselves by nothing at all.
+     */
+    private function queryLastSpokenFirst(): QueryBuilder
+    {
+        // Selected to be ordered on, which is what DQL asks for, and hidden so
+        // that what comes back is still a list of sessions.
+        return $this->createQueryBuilder('session')
+            ->addSelect('COALESCE(session.dateLastMessage, session.dateCreated) AS HIDDEN lastActivity')
+            ->orderBy('lastActivity', self::SORT_DESC);
     }
 }
