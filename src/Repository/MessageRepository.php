@@ -29,6 +29,19 @@ class MessageRepository extends AbstractRepository
         parent::__construct($registry);
     }
 
+    /**
+     * An empty turn of a conversation, for a transcript to fill.
+     *
+     * Written out in full rather than through `createNewMessage()` because what
+     * a line says — who spoke, what was said, when, what it cost — is what the
+     * transcript is about to dictate, and passing placeholders for it would be
+     * writing something nobody said.
+     */
+    public function createNewMessageFromTranscript(Session $session): Message
+    {
+        return new Message($session);
+    }
+
     public function createNewMessage(
         Session $session,
         string $type,
