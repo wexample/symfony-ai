@@ -9,21 +9,13 @@
     {{ table(
         [
             { key: 'maker', label: '@page::column.maker' | trans },
-            { key: 'name', label: '@page::column.name' | trans },
+            { key: 'name', label: '@page::column.name' | trans, cell: 'link' },
             { key: 'api_id', label: '@page::column.api_id' | trans },
-            { key: 'actions', label: '', cell: 'actions', class: 'table--cell--fit' },
         ],
         models|map(model => {
             maker: model.maker,
-            name: model.name,
+            name: { label: model.name, href: path('entity_model_show', { id: model.id }) },
             api_id: model.apiId,
-            actions: [
-                {
-                    icon: 'ph:bold/eye',
-                    href: path('entity_model_show', { id: model.id }),
-                    target: 'modal',
-                },
-            ],
         }),
         { empty_label: '@page::empty' | trans }
     ) }}
