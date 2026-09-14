@@ -142,9 +142,15 @@ final readonly class ClaudeTranscriptReader
     }
 
     /**
+     * What a tool call says it is about, in one line.
+     *
+     * Public because a turn is also read as it happens, from events that carry
+     * the same name and input: both readings must word the call the same way,
+     * or the same call would be two lines in the thread.
+     *
      * @param array<string, mixed> $block
      */
-    private function toolCall(array $block): string
+    public function toolCall(array $block): string
     {
         $name = $block['name'] ?? '';
 
