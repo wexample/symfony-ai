@@ -78,12 +78,38 @@ final readonly class ClaudeTranscriptReader
         }
 
         return [
-            MessageHydrator::KEY_TYPE => $line['type'],
+            MessageHydrator::KEY_TYPE => $this->type($line),
             MessageHydrator::KEY_BODY => $body,
             MessageHydrator::KEY_DATE_CREATED => $line['timestamp'] ?? null,
             MessageHydrator::KEY_TOKENS => $this->tokens($line),
             MessageHydrator::KEY_PROVIDER_MESSAGE_IDENTIFIER => $line['uuid'] ?? null,
         ];
+    }
+
+    /**
+     * Who the line is from, as the thread draws it.
+     *
+     * The transcript files a tool call under the assistant, since that is who
+     * reached for it, but a reader looks at a call and at an answer differently
+     * and the thread has a shape of its own for each. A line mixing the two
+     * stays what the transcript called it: it is mostly speech, and the call it
+     * ends on is a detail of it.
+     *
+     * @param array<string, mixed> $line
+     */
+    private function type(array $line): string
+    {
+        $content = $line['message']['content'] ?? null;
+
+        if (! is_array($content)) {
+            return $line['type'];
+        }
+
+        $kinds = array_column($content, 'type');
+
+        return in_array('tool_use', $kinds, true) && ! in_array('text', $kinds, true)
+            ? Message::TYPE_TOOL
+            : $line['type'];
     }
 
     /**
