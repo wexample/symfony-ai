@@ -12,10 +12,22 @@ use Wexample\SymfonyHelpers\Repository\AbstractRepository;
  * @method Agent|null findOneBy(array $criteria, array $orderBy = null)
  * @method Agent[]    findAll()
  * @method Agent[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+ * @method Agent       saveNewAgent(string $path)
  */
 class AgentRepository extends AbstractRepository
 {
     use AgentEntityManipulatorTrait;
+
+    /**
+     * An agent read from the declaration sitting at that path.
+     *
+     * Nothing else is set: the file owns what it says, so whoever read it
+     * hydrates the row from those values rather than from memory.
+     */
+    public function createNewAgent(string $path): Agent
+    {
+        return new Agent($path);
+    }
 
     /**
      * The agents declared under a directory, named after it.
