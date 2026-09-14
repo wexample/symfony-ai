@@ -2,6 +2,7 @@
 
 namespace Wexample\SymfonyAi\Repository;
 
+use Symfony\Component\Uid\Uuid;
 use Wexample\SymfonyAi\Entity\Agent;
 use Wexample\SymfonyAi\Entity\Traits\Manipulator\AgentEntityManipulatorTrait;
 use Wexample\SymfonyHelpers\Repository\AbstractRepository;
@@ -32,5 +33,25 @@ class AgentRepository extends AbstractRepository
             ->orderBy('agent.name', self::SORT_ASC)
             ->getQuery()
             ->getResult();
+    }
+
+    /**
+     * One agent, on condition that it is declared under that directory.
+     *
+     * Asked for this way rather than by identity alone wherever the address
+     * names both: an agent of another app answering there would be an agent
+     * shown, and acted upon, under a name that does not hold it.
+     */
+    public function findByPathPrefixAndId(
+        string $prefix,
+        Uuid $id,
+    ): ?Agent {
+        foreach ($this->findByPathPrefix($prefix) as $agent) {
+            if ($agent->getId()->equals($id)) {
+                return $agent;
+            }
+        }
+
+        return null;
     }
 }
