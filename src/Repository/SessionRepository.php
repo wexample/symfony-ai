@@ -3,6 +3,7 @@
 namespace Wexample\SymfonyAi\Repository;
 
 use Doctrine\ORM\QueryBuilder;
+use Symfony\Component\Uid\Uuid;
 use Wexample\SymfonyAi\Entity\Agent;
 use Wexample\SymfonyAi\Entity\Session;
 use Wexample\SymfonyAi\Entity\Traits\Manipulator\SessionEntityManipulatorTrait;
@@ -36,11 +37,19 @@ class SessionRepository extends AbstractRepository
      */
     public function findByAgent(Agent $agent): array
     {
-        return $this->queryLastSpokenFirst()
-            ->where('session.agent = :agent')
-            ->setParameter('agent', $agent)
+        return $this->queryByAgent($agent)
             ->getQuery()
             ->getResult();
+    }
+
+    /**
+     * The same, left open: what a listing reads a page at a time.
+     */
+    public function queryByAgent(Agent $agent): QueryBuilder
+    {
+        return $this->queryLastSpokenFirst()
+            ->where($this->queryField('agent').' = :agent')
+            ->setParameter('agent', $agent);
     }
 
     /**
@@ -53,10 +62,30 @@ class SessionRepository extends AbstractRepository
     public function findByPathPrefix(string $prefix): array
     {
         return $this->queryLastSpokenFirst()
-            ->where('session.path LIKE :prefix')
+            ->where($this->queryField('path').' LIKE :prefix')
             ->setParameter('prefix', addcslashes($prefix, '%_\\').'/%')
             ->getQuery()
             ->getResult();
+    }
+
+    /**
+     * One conversation, on condition that it was held inside that directory.
+     *
+     * Asked for this way rather than by identity alone wherever the address
+     * names both: another app's conversation answering there would be shown,
+     * and spoken in, under a name that does not hold it.
+     */
+    public function findByPathPrefixAndId(
+        string $prefix,
+        Uuid $id,
+    ): ?Session {
+        foreach ($this->findByPathPrefix($prefix) as $session) {
+            if ($session->getId()->equals($id)) {
+                return $session;
+            }
+        }
+
+        return null;
     }
 
     /**
@@ -69,7 +98,7 @@ class SessionRepository extends AbstractRepository
     public function findByAgentName(string $agentName): array
     {
         return $this->queryLastSpokenFirst()
-            ->where('session.agentName = :agentName')
+            ->where($this->queryField('agentName').' = :agentName')
             ->setParameter('agentName', $agentName)
             ->getQuery()
             ->getResult();
@@ -84,10 +113,18 @@ class SessionRepository extends AbstractRepository
      */
     private function queryLastSpokenFirst(): QueryBuilder
     {
+        // The alias the helpers of the base repository expect: counting a
+        // builder, which is what a paginated listing does first, goes through
+        // it, and a hand-picked one would leave the count unable to name the
+        // rows it is counting.
+        $alias = $this->getEntityQueryAlias();
+
         // Selected to be ordered on, which is what DQL asks for, and hidden so
         // that what comes back is still a list of sessions.
-        return $this->createQueryBuilder('session')
-            ->addSelect('COALESCE(session.dateLastMessage, session.dateCreated) AS HIDDEN lastActivity')
+        return $this->createQueryBuilder($alias)
+            ->addSelect(
+                sprintf('COALESCE(%s.dateLastMessage, %s.dateCreated) AS HIDDEN lastActivity', $alias, $alias)
+            )
             ->orderBy('lastActivity', self::SORT_DESC);
     }
 }
