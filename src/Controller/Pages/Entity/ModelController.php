@@ -14,8 +14,8 @@ use Wexample\SymfonyLoader\Controller\AbstractEntityPagesController;
 /**
  * The models an agent can be pointed at, as the catalogue holds them.
  *
- * Read only: the list comes from what the package ships, so a model is neither
- * created nor edited from here.
+ * Read only: the list is projected from whoever runs the turns, so a model is
+ * neither created nor edited from here.
  */
 #[Route(path: 'model/', name: 'entity_model_')]
 class ModelController extends AbstractEntityPagesController
@@ -31,12 +31,11 @@ class ModelController extends AbstractEntityPagesController
         ModelRepository $modelRepository
     ): Response {
         return $this->renderPage(self::ROUTE_INDEX, [
+            // The list arrives ranked, most capable first, and sorting it on any
+            // field of its own is what would lose that.
             'models' => $modelRepository->findBy(
                 [],
-                [
-                    'maker' => ModelRepository::SORT_ASC,
-                    'name' => ModelRepository::SORT_ASC,
-                ]
+                ['position' => ModelRepository::SORT_ASC]
             ),
         ]);
     }

@@ -9,6 +9,7 @@ use Wexample\Pseudocode\Attribute\PseudocodeExport;
 use Wexample\SymfonyAi\Repository\ModelRepository;
 use Wexample\SymfonyApi\Attribute\ApiEntity;
 use Wexample\SymfonyHelpers\Entity\AbstractEntity;
+use Wexample\SymfonyHelpers\Entity\Traits\HasDescriptionTrait;
 use Wexample\SymfonyHelpers\Entity\Traits\HasNameTrait;
 
 /**
@@ -19,9 +20,14 @@ use Wexample\SymfonyHelpers\Entity\Traits\HasNameTrait;
  * a maker names its range as it pleases, and pins dated snapshots it later
  * bumps, so a name taken apart is a name that breaks at the next release.
  *
- * No app declares it: unlike an agent, it comes from the list the package ships
- * and is seeded rather than projected. Its identity derives from the name, so a
- * catalogue seeded twice holds one record per model, not two.
+ * No app declares it and nothing here lists it either: the list belongs to
+ * whoever runs the turns and refuses an unknown name, so the record is
+ * projected from there, uuid included. Offering a model that executor would
+ * reject is the one thing this record exists to prevent.
+ *
+ * Only the models an agent can reason with are listed. Drawing, speaking and
+ * transcribing are other jobs, and the record says nothing that would tell them
+ * apart yet.
  */
 #[ApiEntity]
 #[PseudocodeExport(inherited: true)]
@@ -30,8 +36,8 @@ use Wexample\SymfonyHelpers\Entity\Traits\HasNameTrait;
 #[ORM\UniqueConstraint(columns: ['name'])]
 class Model extends AbstractEntity
 {
+    use HasDescriptionTrait;
     use HasNameTrait;
-    public const ID_NAMESPACE = 'c1f0a4d2-8e5b-5f37-b2a4-9d6e0c7b1a83';
 
     /** Who builds it: `anthropic`, `openai`. Shown, never dispatched on. */
     #[ORM\Column(type: Types::STRING, length: 255)]
@@ -44,23 +50,18 @@ class Model extends AbstractEntity
     #[ORM\Column(type: Types::STRING, length: 255)]
     protected string $apiId;
 
-    public function __construct(
-        string $name,
-        string $maker,
-        string $apiId
-    ) {
+    /**
+     * Its rank in the list it comes from, the most capable first. That order is
+     * a judgement nobody here could rebuild by sorting.
+     */
+    #[ORM\Column(type: Types::INTEGER)]
+    protected int $position = 0;
+
+    public function __construct(Uuid $id)
+    {
         parent::__construct();
 
-        $this->name = $name;
-        $this->maker = $maker;
-        $this->apiId = $apiId;
-
-        $this->setId(self::idFor($name));
-    }
-
-    public static function idFor(string $name): Uuid
-    {
-        return Uuid::v5(Uuid::fromString(self::ID_NAMESPACE), $name);
+        $this->setId($id);
     }
 
     public function getMaker(): string
@@ -68,8 +69,34 @@ class Model extends AbstractEntity
         return $this->maker;
     }
 
+    public function setMaker(string $maker): self
+    {
+        $this->maker = $maker;
+
+        return $this;
+    }
+
     public function getApiId(): string
     {
         return $this->apiId;
+    }
+
+    public function setApiId(string $apiId): self
+    {
+        $this->apiId = $apiId;
+
+        return $this;
+    }
+
+    public function getPosition(): int
+    {
+        return $this->position;
+    }
+
+    public function setPosition(int $position): self
+    {
+        $this->position = $position;
+
+        return $this;
     }
 }

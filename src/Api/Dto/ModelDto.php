@@ -15,6 +15,11 @@ class ModelDto extends AbstractEntityDto
 
     public string $apiId;
 
+    public ?string $description;
+
+    /** Its rank in the list it comes from, the most capable first. */
+    public int $position;
+
     /**
      * @param Model $entity
      */
@@ -25,6 +30,8 @@ class ModelDto extends AbstractEntityDto
         $dto->name = $entity->getName();
         $dto->maker = $entity->getMaker();
         $dto->apiId = $entity->getApiId();
+        $dto->description = $entity->getDescription();
+        $dto->position = $entity->getPosition();
 
         return $dto;
     }

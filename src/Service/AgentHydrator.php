@@ -55,7 +55,7 @@ final readonly class AgentHydrator
     private function model(?string $name): ?Model
     {
         return $name
-            ? $this->modelRepository->find(Model::idFor($name))
+            ? $this->modelRepository->findOneBy([ModelHydrator::KEY_NAME => $name])
             : null;
     }
 }
