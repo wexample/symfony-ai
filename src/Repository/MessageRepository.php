@@ -84,9 +84,13 @@ class MessageRepository extends AbstractRepository
      */
     public function queryBySessionOldestFirst(Session $session): QueryBuilder
     {
+        // The date is kept to the second and one turn writes several messages
+        // within one, so the identifier — given in creation order — settles
+        // what the date cannot.
         return $this
             ->queryByField('session', $session)
-            ->orderBy($this->getEntityQueryAlias().'.dateCreated', self::SORT_ASC);
+            ->orderBy($this->getEntityQueryAlias().'.dateCreated', self::SORT_ASC)
+            ->addOrderBy($this->getEntityQueryAlias().'.id', self::SORT_ASC);
     }
 
     /**
