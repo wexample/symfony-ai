@@ -1,6 +1,6 @@
 # symfony-ai
 
-Version: 1.0.3
+Version: 2.0.0
 
 The repository does not provide any concrete code that could be documented for now.
 
@@ -27,14 +27,16 @@ Visit the [Wexample Suite documentation](https://docs.wexample.com) for the comp
 
 ## Dependencies
 
-- php: >=8.2
+- php: >=8.5
 - doctrine/orm: ^3.0
 - symfony/uid: >=6.2
 - wexample/php-pseudocode: >=1.0.0
-- wexample/symfony-api: >=4.0.0
-- wexample/symfony-design-system: >=10.0.0
-- wexample/symfony-helpers: >=7.0.0
-- wexample/symfony-pseudocode: >=2.0.0
+- wexample/symfony-api: >=5.0.0
+- wexample/symfony-design-system: >=11.0.0
+- wexample/symfony-forms: >=4.0.0
+- wexample/symfony-helpers: >=8.0.0
+- wexample/symfony-live: >=3.0.0
+- wexample/symfony-pseudocode: >=3.0.0
 
 ## Versioning & Compatibility Policy
 
