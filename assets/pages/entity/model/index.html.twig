@@ -6,7 +6,7 @@
 {%- block page_body -%}
     <h1>{{ '@page::page_title' | trans }}</h1>
 
-    {{ table(
+    {{ data_table(
         [
             { key: 'maker', label: '@page::column.maker' | trans },
             { key: 'name', label: '@page::column.name' | trans, cell: 'link' },
