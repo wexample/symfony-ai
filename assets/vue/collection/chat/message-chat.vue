@@ -1,5 +1,5 @@
 <script>
-import AbstractEntityChat from '@wexample/symfony-design-system/vue/collection/chat/abstract-entity-chat.vue';
+import AbstractEntityChat from '@wexample/symfony-design-system/components/collection/chat/abstract-entity-chat/abstract-entity-chat.vue';
 import Message from '../../../Entity/Message';
 
 const ICON_BY_TYPE = {
