@@ -1,6 +1,6 @@
 # symfony-ai
 
-Version: 2.0.7
+Version: 2.0.8
 
 The repository does not provide any concrete code that could be documented for now.
 
@@ -32,7 +32,7 @@ Visit the [Wexample Suite documentation](https://docs.wexample.com) for the comp
 - symfony/uid: >=6.2
 - wexample/php-pseudocode: >=1.0.0
 - wexample/symfony-api: >=5.0.0
-- wexample/symfony-design-system: >=18.0.0
+- wexample/symfony-design-system: >=19.0.0
 - wexample/symfony-forms: >=7.0.0
 - wexample/symfony-helpers: >=9.0.0
 - wexample/symfony-live: >=4.0.0
