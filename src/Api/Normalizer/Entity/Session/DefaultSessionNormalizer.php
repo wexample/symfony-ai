@@ -2,10 +2,10 @@
 
 namespace Wexample\SymfonyAi\Api\Normalizer\Entity\Session;
 
+use ArrayObject;
 use Wexample\SymfonyAi\Api\Dto\SessionDto;
 use Wexample\SymfonyAi\Entity\Session;
 use Wexample\SymfonyAi\Entity\Traits\Manipulator\SessionEntityManipulatorTrait;
-use ArrayObject;
 use Wexample\SymfonyHelpers\Entity\AbstractEntity;
 use Wexample\SymfonyHelpers\Interface\NormalizableDataInterface;
 use Wexample\SymfonyHelpers\Normalizer\AbstractEntityNormalizer;

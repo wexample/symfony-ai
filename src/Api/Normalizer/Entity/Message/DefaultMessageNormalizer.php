@@ -2,10 +2,10 @@
 
 namespace Wexample\SymfonyAi\Api\Normalizer\Entity\Message;
 
+use ArrayObject;
 use Wexample\SymfonyAi\Api\Dto\MessageDto;
 use Wexample\SymfonyAi\Entity\Message;
 use Wexample\SymfonyAi\Entity\Traits\Manipulator\MessageEntityManipulatorTrait;
-use ArrayObject;
 use Wexample\SymfonyHelpers\Entity\AbstractEntity;
 use Wexample\SymfonyHelpers\Interface\NormalizableDataInterface;
 use Wexample\SymfonyHelpers\Normalizer\AbstractEntityNormalizer;

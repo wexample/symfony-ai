@@ -2,10 +2,10 @@
 
 namespace Wexample\SymfonyAi\Api\Normalizer\Entity\Model;
 
+use ArrayObject;
 use Wexample\SymfonyAi\Api\Dto\ModelDto;
 use Wexample\SymfonyAi\Entity\Model;
 use Wexample\SymfonyAi\Entity\Traits\Manipulator\ModelEntityManipulatorTrait;
-use ArrayObject;
 use Wexample\SymfonyHelpers\Entity\AbstractEntity;
 use Wexample\SymfonyHelpers\Interface\NormalizableDataInterface;
 use Wexample\SymfonyHelpers\Normalizer\AbstractEntityNormalizer;
