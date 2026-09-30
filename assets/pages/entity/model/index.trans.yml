@@ -1,0 +1,7 @@
+en:
+  page_title: Models
+  empty: No model in the catalogue.
+  column:
+    maker: Maker
+    name: Name
+    api_id: API id
