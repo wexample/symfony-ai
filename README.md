@@ -1,6 +1,6 @@
 # symfony-ai
 
-Version: 2.0.25
+Version: 2.0.26
 
 The repository does not provide any concrete code that could be documented for now.
 
