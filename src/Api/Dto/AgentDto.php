@@ -12,7 +12,11 @@ class AgentDto extends AbstractEntityDto
 
     public ?string $description;
 
-    public string $path;
+    /** Null for an agent a package ships, which no file declares. */
+    public ?string $path;
+
+    /** Where wex says a shipped agent comes from — `addon:ai/editor`. */
+    public ?string $qualifiedName;
 
     /** Null while the file names a model the catalogue does not hold. */
     public ?ModelDto $model;
@@ -27,6 +31,7 @@ class AgentDto extends AbstractEntityDto
         $dto->name = $entity->getName();
         $dto->description = $entity->getDescription();
         $dto->path = $entity->getPath();
+        $dto->qualifiedName = $entity->getQualifiedName();
         $dto->model = $entity->getModel() ? ModelDto::fromEntity($entity->getModel()) : null;
 
         return $dto;

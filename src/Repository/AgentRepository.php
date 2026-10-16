@@ -30,6 +30,25 @@ class AgentRepository extends AbstractRepository
     }
 
     /**
+     * An agent a package ships, which wex lists under that identity and no
+     * file declares. Hydrated, as the other, from what wex says of it.
+     */
+    public function createNewAgentFromWex(Uuid $id): Agent
+    {
+        return new Agent(id: $id);
+    }
+
+    /**
+     * The agents packages ship, the same for every app.
+     *
+     * @return Agent[]
+     */
+    public function findBuiltIn(): array
+    {
+        return $this->findBy(['path' => null], ['name' => self::SORT_ASC]);
+    }
+
+    /**
      * The agents declared under a directory, named after it.
      *
      * What that directory is stays the caller's business: an agent knows the

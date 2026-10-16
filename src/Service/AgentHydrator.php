@@ -17,6 +17,7 @@ final readonly class AgentHydrator
     public const KEY_DESCRIPTION = 'description';
     public const KEY_MODEL = 'model';
     public const KEY_NAME = 'name';
+    public const KEY_QUALIFIED_NAME = 'qualified_name';
 
     public function __construct(
         private ModelRepository $modelRepository,
@@ -33,6 +34,7 @@ final readonly class AgentHydrator
         return $agent
             ->setName($values[self::KEY_NAME] ?? null)
             ->setDescription($values[self::KEY_DESCRIPTION] ?? null)
+            ->setQualifiedName($values[self::KEY_QUALIFIED_NAME] ?? null)
             ->setModel($this->model($values[self::KEY_MODEL] ?? null));
     }
 
@@ -44,6 +46,7 @@ final readonly class AgentHydrator
         return [
             self::KEY_NAME => $agent->getName(),
             self::KEY_DESCRIPTION => $agent->getDescription(),
+            self::KEY_QUALIFIED_NAME => $agent->getQualifiedName(),
             self::KEY_MODEL => $agent->getModel()?->getName(),
         ];
     }
