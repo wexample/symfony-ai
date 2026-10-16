@@ -85,4 +85,22 @@ class AgentRepository extends AbstractRepository
 
         return null;
     }
+
+    /**
+     * One agent the directory reaches: one declared under it, or one a package
+     * ships, which every directory reaches alike.
+     */
+    public function findReachableFrom(
+        string $prefix,
+        Uuid $id,
+    ): ?Agent {
+        $agent = $this->findByPathPrefixAndId($prefix, $id);
+        if ($agent instanceof Agent) {
+            return $agent;
+        }
+
+        $agent = $this->find($id);
+
+        return $agent?->isBuiltIn() ? $agent : null;
+    }
 }
