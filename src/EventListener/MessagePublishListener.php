@@ -6,12 +6,12 @@ use Doctrine\Bundle\DoctrineBundle\Attribute\AsDoctrineListener;
 use Doctrine\ORM\Event\PostFlushEventArgs;
 use Doctrine\ORM\Event\PostPersistEventArgs;
 use Doctrine\ORM\Events;
+use Symfony\Contracts\Service\ResetInterface;
 use Wexample\SymfonyAi\Api\Normalizer\Entity\Message\DefaultMessageNormalizer;
 use Wexample\SymfonyAi\Entity\Message;
 use Wexample\SymfonyLive\Enum\LiveTopicAction;
 use Wexample\SymfonyLive\Helper\LiveTopicHelper;
 use Wexample\SymfonyLive\Service\LivePublisherService;
-use Symfony\Contracts\Service\ResetInterface;
 
 /**
  * Says on the session's topic that a turn was written, whoever wrote it.
