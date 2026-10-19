@@ -11,6 +11,7 @@ use Wexample\SymfonyAi\Entity\Message;
 use Wexample\SymfonyLive\Enum\LiveTopicAction;
 use Wexample\SymfonyLive\Helper\LiveTopicHelper;
 use Wexample\SymfonyLive\Service\LivePublisherService;
+use Symfony\Contracts\Service\ResetInterface;
 
 /**
  * Says on the session's topic that a turn was written, whoever wrote it.
@@ -26,7 +27,7 @@ use Wexample\SymfonyLive\Service\LivePublisherService;
  */
 #[AsDoctrineListener(event: Events::postPersist)]
 #[AsDoctrineListener(event: Events::postFlush)]
-class MessagePublishListener
+class MessagePublishListener implements ResetInterface
 {
     final public const EVENT_MESSAGE_CREATED = 'message-created';
 
@@ -37,6 +38,15 @@ class MessagePublishListener
         private readonly LivePublisherService $publisher,
         private readonly DefaultMessageNormalizer $normalizer,
     ) {
+    }
+
+    /**
+     * Emptied by the flush that publishes them; a request that failed before
+     * it would otherwise hand its messages to the next flush.
+     */
+    public function reset(): void
+    {
+        $this->pending = [];
     }
 
     public function postPersist(PostPersistEventArgs $args): void
