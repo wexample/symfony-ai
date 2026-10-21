@@ -1,6 +1,6 @@
 # symfony-ai
 
-Version: 3.0.0
+Version: 3.0.1
 
 The repository does not provide any concrete code that could be documented for now.
 
@@ -30,9 +30,9 @@ The suite includes packages for configuration management, file handling, prompts
 - symfony/uid: >=6.2
 - wexample/php-pseudocode: >=2.2.0
 - wexample/symfony-api: >=14.0.0
-- wexample/symfony-design-system: >=37.0.0
-- wexample/symfony-forms: >=13.0.0
-- wexample/symfony-helpers: >=17.0.0
+- wexample/symfony-design-system: >=39.0.0
+- wexample/symfony-forms: >=14.0.0
+- wexample/symfony-helpers: >=18.0.0
 - wexample/symfony-live: >=5.6.0
 - wexample/symfony-pseudocode: >=4.0.0
 
