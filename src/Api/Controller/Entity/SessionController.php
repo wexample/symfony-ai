@@ -20,7 +20,7 @@ use Wexample\SymfonyHelpers\Controller\AbstractController;
  * A listing is always asked for by the agent that held the conversations: the
  * board has no page showing everybody's threads at once, and this answers none.
  */
-#[Route(path: 'api/session/', name: 'api_session_')]
+#[Route(path: '_api/session/', name: 'api_session_')]
 class SessionController extends AbstractApiController
 {
     final public const string QUERY_OPTION_AGENT = 'agent';

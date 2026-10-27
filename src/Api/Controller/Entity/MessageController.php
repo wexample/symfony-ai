@@ -23,7 +23,7 @@ use Wexample\SymfonyHelpers\Controller\AbstractController;
  * A thread is always asked for by its session: a message says nothing on its
  * own, and nothing here ever answers with the messages of the whole board.
  */
-#[Route(path: 'api/message/', name: 'api_message_')]
+#[Route(path: '_api/message/', name: 'api_message_')]
 class MessageController extends AbstractApiController
 {
     final public const string QUERY_OPTION_SESSION = 'session';
