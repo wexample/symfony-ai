@@ -1,12 +1,8 @@
 {
     "name": "agent",
     "type": "class",
-    "description": "An agent an app declares, projected into a record.\nThe file owns what it says: this record is rebuilt from it and never written\nback to it. The declaration is named by its own identity — `<uuid>.yml` — so\nthe record takes that uuid, an agent renamed or moved stays the same agent,\nand a declaration that is gone leaves no record behind.",
+    "description": "An agent, projected into a record: one an app declares, or one wex ships.\nThe source owns what it says: this record is rebuilt from it and never\nwritten back to it. An app's agent is declared in a file named by its own\nidentity — `<uuid>.json` — so the record takes that uuid, an agent renamed\nor moved stays the same agent, and a declaration that is gone leaves no\nrecord behind. An agent a package ships has no file: wex lists it, with an\nidentity that follows from its qualified name, and it is read only.",
     "properties": [
-        {
-            "name": "id",
-            "type": "Symfony\\Component\\Uid\\Uuid"
-        },
         {
             "name": "description",
             "type": "string",
@@ -20,8 +16,20 @@
             "default": null
         },
         {
+            "name": "id",
+            "type": "Symfony\\Component\\Uid\\Uuid"
+        },
+        {
             "name": "path",
-            "type": "string"
+            "type": "string",
+            "nullable": true,
+            "default": null
+        },
+        {
+            "name": "qualifiedName",
+            "type": "string",
+            "nullable": true,
+            "default": null
         },
         {
             "name": "model",
@@ -31,6 +39,53 @@
         }
     ],
     "methods": [
+        {
+            "type": "method",
+            "name": "getDescription",
+            "return": {
+                "type": "string"
+            }
+        },
+        {
+            "type": "method",
+            "name": "setDescription",
+            "parameters": [
+                {
+                    "type": "string",
+                    "name": "description"
+                }
+            ],
+            "return": {
+                "type": "self"
+            }
+        },
+        {
+            "type": "method",
+            "name": "getName",
+            "return": {
+                "type": "string"
+            }
+        },
+        {
+            "type": "method",
+            "name": "setName",
+            "parameters": [
+                {
+                    "type": "string",
+                    "name": "name"
+                }
+            ],
+            "return": {
+                "type": "self"
+            }
+        },
+        {
+            "type": "method",
+            "name": "setNameFromTitle",
+            "return": {
+                "type": "self"
+            }
+        },
         {
             "type": "method",
             "name": "buildEntityPath",
@@ -94,58 +149,22 @@
         },
         {
             "type": "method",
-            "name": "getDescription",
-            "return": {
-                "type": "string"
-            }
-        },
-        {
-            "type": "method",
-            "name": "setDescription",
-            "parameters": [
-                {
-                    "type": "string",
-                    "name": "description"
-                }
-            ],
-            "return": {
-                "type": "self"
-            }
-        },
-        {
-            "type": "method",
-            "name": "getName",
-            "return": {
-                "type": "string"
-            }
-        },
-        {
-            "type": "method",
-            "name": "setName",
-            "parameters": [
-                {
-                    "type": "string",
-                    "name": "name"
-                }
-            ],
-            "return": {
-                "type": "self"
-            }
-        },
-        {
-            "type": "method",
-            "name": "setNameFromTitle",
-            "return": {
-                "type": "self"
-            }
-        },
-        {
-            "type": "method",
             "name": "__construct",
+            "description": "",
             "parameters": [
                 {
                     "type": "string",
-                    "name": "path"
+                    "name": "path",
+                    "optional": true,
+                    "default": null,
+                    "description": "the declaration of an app's agent"
+                },
+                {
+                    "type": "Uuid",
+                    "name": "id",
+                    "optional": true,
+                    "default": null,
+                    "description": "the identity wex gives an agent it ships, which has no path"
                 }
             ]
         },
@@ -168,6 +187,34 @@
             "name": "getPath",
             "return": {
                 "type": "string"
+            }
+        },
+        {
+            "type": "method",
+            "name": "isBuiltIn",
+            "description": "Whether a package ships it: then nothing in an app declares it, and nothing here edits it.",
+            "return": {
+                "type": "bool"
+            }
+        },
+        {
+            "type": "method",
+            "name": "getQualifiedName",
+            "return": {
+                "type": "string"
+            }
+        },
+        {
+            "type": "method",
+            "name": "setQualifiedName",
+            "parameters": [
+                {
+                    "type": "string",
+                    "name": "qualifiedName"
+                }
+            ],
+            "return": {
+                "type": "self"
             }
         },
         {

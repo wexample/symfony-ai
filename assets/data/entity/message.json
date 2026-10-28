@@ -4,10 +4,6 @@
     "description": "One turn of a conversation: who spoke, what was said, when.\nOnly what every engine has. A provider's own transcript says a great deal\nmore — Claude's holds titles, queue operations and a parent link per line —\nand none of it survives a change of provider, so none of it is stored here.\n`providerMessageIdentifier` is the one thread back to the original.",
     "properties": [
         {
-            "name": "id",
-            "type": "Symfony\\Component\\Uid\\Uuid"
-        },
-        {
             "name": "body",
             "type": "string",
             "nullable": true,
@@ -24,6 +20,10 @@
             "type": "string",
             "nullable": true,
             "default": null
+        },
+        {
+            "name": "id",
+            "type": "Symfony\\Component\\Uid\\Uuid"
         },
         {
             "name": "session",
@@ -43,67 +43,6 @@
         }
     ],
     "methods": [
-        {
-            "type": "method",
-            "name": "buildEntityPath",
-            "parameters": [
-                {
-                    "type": "string",
-                    "name": "className"
-                }
-            ],
-            "return": {
-                "type": "string"
-            }
-        },
-        {
-            "type": "method",
-            "name": "getEntityKeyName",
-            "return": {
-                "type": "string"
-            }
-        },
-        {
-            "type": "method",
-            "name": "getEntityShortName",
-            "return": {
-                "type": "string"
-            }
-        },
-        {
-            "type": "method",
-            "name": "getId",
-            "return": {
-                "type": "Symfony\\Component\\Uid\\Uuid"
-            }
-        },
-        {
-            "type": "method",
-            "name": "setId",
-            "parameters": [
-                {
-                    "type": "Symfony\\Component\\Uid\\Uuid",
-                    "name": "id"
-                }
-            ],
-            "return": {
-                "type": "void"
-            }
-        },
-        {
-            "type": "method",
-            "name": "getTableizedName",
-            "return": {
-                "type": "string"
-            }
-        },
-        {
-            "type": "method",
-            "name": "getCamelName",
-            "return": {
-                "type": "string"
-            }
-        },
         {
             "type": "method",
             "name": "getBody",
@@ -212,6 +151,67 @@
             ],
             "return": {
                 "type": "void"
+            }
+        },
+        {
+            "type": "method",
+            "name": "buildEntityPath",
+            "parameters": [
+                {
+                    "type": "string",
+                    "name": "className"
+                }
+            ],
+            "return": {
+                "type": "string"
+            }
+        },
+        {
+            "type": "method",
+            "name": "getEntityKeyName",
+            "return": {
+                "type": "string"
+            }
+        },
+        {
+            "type": "method",
+            "name": "getEntityShortName",
+            "return": {
+                "type": "string"
+            }
+        },
+        {
+            "type": "method",
+            "name": "getId",
+            "return": {
+                "type": "Symfony\\Component\\Uid\\Uuid"
+            }
+        },
+        {
+            "type": "method",
+            "name": "setId",
+            "parameters": [
+                {
+                    "type": "Symfony\\Component\\Uid\\Uuid",
+                    "name": "id"
+                }
+            ],
+            "return": {
+                "type": "void"
+            }
+        },
+        {
+            "type": "method",
+            "name": "getTableizedName",
+            "return": {
+                "type": "string"
+            }
+        },
+        {
+            "type": "method",
+            "name": "getCamelName",
+            "return": {
+                "type": "string"
             }
         },
         {

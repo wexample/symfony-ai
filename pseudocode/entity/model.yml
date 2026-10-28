@@ -1,19 +1,52 @@
 items:
   - name: Model
     type: class
-    description: "One model, under the one name a file points at it by: `claude-opus-5`.\nThat name is opaque. Nothing splits it to find the maker or the identifier\nthe vendor's own API answers to, because both are fields of their own here —\na maker names its range as it pleases, and pins dated snapshots it later\nbumps, so a name taken apart is a name that breaks at the next release.\nNo app declares it: unlike an agent, it comes from the list the package ships\nand is seeded rather than projected. Its identity derives from the name, so a\ncatalogue seeded twice holds one record per model, not two."
+    description: "One model, under the one name a file points at it by: `claude-opus-5`.\nThat name is opaque. Nothing splits it to find the maker or the identifier\nthe vendor's own API answers to, because both are fields of their own here —\na maker names its range as it pleases, and pins dated snapshots it later\nbumps, so a name taken apart is a name that breaks at the next release.\nNo app declares it and nothing here lists it either: the list belongs to\nwhoever runs the turns and refuses an unknown name, so the record is\nprojected from there, uuid included. Offering a model that executor would\nreject is the one thing this record exists to prevent.\nOnly the models an agent can reason with are listed. Drawing, speaking and\ntranscribing are other jobs, and the record says nothing that would tell them\napart yet."
     properties:
-      - name: id
-        type: Symfony\Component\Uid\Uuid
+      - name: description
+        type: string
+        nullable: true
+        default: null
       - name: name
         type: string
         nullable: true
         default: null
+      - name: id
+        type: Symfony\Component\Uid\Uuid
       - name: maker
         type: string
       - name: apiId
         type: string
+      - name: position
+        type: int
+        default: 0
     methods:
+      - type: method
+        name: getDescription
+        return:
+          type: string
+      - type: method
+        name: setDescription
+        parameters:
+          - type: string
+            name: description
+        return:
+          type: self
+      - type: method
+        name: getName
+        return:
+          type: string
+      - type: method
+        name: setName
+        parameters:
+          - type: string
+            name: name
+        return:
+          type: self
+      - type: method
+        name: setNameFromTitle
+        return:
+          type: self
       - type: method
         name: buildEntityPath
         parameters:
@@ -49,41 +82,40 @@ items:
         return:
           type: string
       - type: method
-        name: getName
-        return:
-          type: string
-      - type: method
-        name: setName
-        parameters:
-          - type: string
-            name: name
-        return:
-          type: self
-      - type: method
-        name: setNameFromTitle
-        return:
-          type: self
-      - type: method
         name: __construct
         parameters:
-          - type: string
-            name: name
-          - type: string
-            name: maker
-          - type: string
-            name: apiId
-      - type: method
-        name: idFor
-        parameters:
-          - type: string
-            name: name
-        return:
-          type: Uuid
+          - type: Uuid
+            name: id
       - type: method
         name: getMaker
         return:
           type: string
       - type: method
+        name: setMaker
+        parameters:
+          - type: string
+            name: maker
+        return:
+          type: self
+      - type: method
         name: getApiId
         return:
           type: string
+      - type: method
+        name: setApiId
+        parameters:
+          - type: string
+            name: apiId
+        return:
+          type: self
+      - type: method
+        name: getPosition
+        return:
+          type: int
+      - type: method
+        name: setPosition
+        parameters:
+          - type: int
+            name: position
+        return:
+          type: self

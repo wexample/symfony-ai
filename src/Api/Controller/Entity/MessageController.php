@@ -16,6 +16,7 @@ use Wexample\SymfonyApi\Api\Attribute\ValidateRequestContent;
 use Wexample\SymfonyApi\Api\Class\ApiResponse;
 use Wexample\SymfonyApi\Api\Controller\AbstractApiController;
 use Wexample\SymfonyHelpers\Controller\AbstractController;
+use Wexample\SymfonyHelpers\Voter\AbstractEntityVoter;
 
 /**
  * What the conversation is read through.
@@ -53,13 +54,29 @@ class MessageController extends AbstractApiController
             return self::apiResponseError('Unknown session.');
         }
 
+        // Who may speak in a conversation is the app's to say, through a voter
+        // of the session's kind: none voting, nobody may.
+        $this->denyAccessUnlessGranted(AbstractEntityVoter::EDIT, $session);
+
+        if (is_array($result = $createMessageDto->toolResult)) {
+            if (! is_string($result['tool'] ?? null) || ! is_string($result['callId'] ?? null)) {
+                return self::apiResponseError('A tool result names its tool and the call it answers.');
+            }
+
+            $type = Message::TYPE_TOOL;
+            $body = json_encode($result, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+        } else {
+            $type = Message::TYPE_USER;
+            $body = trim((string) $createMessageDto->body);
+
+            if ('' === $body) {
+                return self::apiResponseError('A message needs a body.');
+            }
+        }
+
         return self::apiResponseSuccess(
             data: $normalizer->normalize(
-                $messageRepository->saveNewMessageAndPushEvent(
-                    $session,
-                    Message::TYPE_USER,
-                    $createMessageDto->body
-                )
+                $messageRepository->saveNewMessageAndPushEvent($session, $type, $body)
             )
         );
     }
@@ -81,6 +98,8 @@ class MessageController extends AbstractApiController
         if (! $session) {
             return self::apiResponseError('Unknown session.');
         }
+
+        $this->denyAccessUnlessGranted(AbstractEntityVoter::VIEW, $session);
 
         $builder = $messageRepository->queryBySessionOldestFirst($session);
 

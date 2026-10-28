@@ -7,12 +7,13 @@ use DateTimeInterface;
 use Symfony\Component\Uid\Uuid;
 use Wexample\SymfonyAi\Entity\Agent;
 use Wexample\SymfonyAi\Entity\Model;
-use Wexample\SymfonyAi\Entity\Session;
+use Wexample\SymfonyAi\Entity\ClaudeSession;
 use Wexample\SymfonyAi\Repository\AgentRepository;
 use Wexample\SymfonyAi\Repository\ModelRepository;
 
 /**
- * Translates a session between a plain array and its record, both ways.
+ * Translates a Claude session between a plain array and its record, both
+ * ways: the record is the engine's, so is the hydrator.
  *
  * Where that array is read from and written to is not known here, on the same
  * terms as `AgentHydrator`.
@@ -38,9 +39,9 @@ final readonly class SessionHydrator
      * @param array<string, mixed> $values
      */
     public function hydrate(
-        Session $session,
+        ClaudeSession $session,
         array $values
-    ): Session {
+    ): ClaudeSession {
         return $session
             ->setName($values[self::KEY_NAME] ?? null)
             ->setAgentName($values[self::KEY_AGENT_NAME] ?? '')
@@ -55,7 +56,7 @@ final readonly class SessionHydrator
     /**
      * @return array<string, mixed>
      */
-    public function dump(Session $session): array
+    public function dump(ClaudeSession $session): array
     {
         return [
             self::KEY_NAME => $session->getName(),

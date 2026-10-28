@@ -5,7 +5,6 @@ namespace Wexample\SymfonyAi\Entity;
 use DateTimeInterface;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Uid\Uuid;
 use Wexample\Pseudocode\Attribute\PseudocodeExport;
 use Wexample\SymfonyAi\Repository\SessionRepository;
 use Wexample\SymfonyApi\Attribute\ApiEntity;
@@ -15,14 +14,16 @@ use Wexample\SymfonyLive\Attribute\LiveEntity;
 use Wexample\SymfonyLive\Enum\LiveTopicAction;
 
 /**
- * One conversation held in the app, projected from its record file.
+ * One conversation held in the app, whatever engine holds it.
  *
  * Everything about the conversation except the messages: who ran it, what it
- * was called, where it got to. The transcript belongs to the engine and stays
- * out — `sdkId` is the thread back to it.
+ * was called, where it got to. What ties it to its engine — a transcript on
+ * disk, a session on a remote server — is the engine's own and lives in the
+ * subclass of that engine, each in a table of its own joined to this one.
  *
- * Like an agent, the record is named by its own identity — `<uuid>.yml` — so
- * the row takes that uuid and a file that is gone leaves no row behind.
+ * The root of the hierarchy is what the api, the live topics and the browser
+ * know: every kind is a `session` to them, told apart by `engine`, which the
+ * subclasses name themselves after — `ClaudeSession` is `claude`.
  */
 #[ApiEntity]
 #[EntityForm]
@@ -30,12 +31,10 @@ use Wexample\SymfonyLive\Enum\LiveTopicAction;
 #[PseudocodeExport(inherited: true)]
 #[ORM\Entity(repositoryClass: SessionRepository::class)]
 #[ORM\Table(name: 'session')]
-class Session extends AbstractEntity
+#[ORM\InheritanceType('JOINED')]
+#[ORM\DiscriminatorColumn(name: 'engine', type: Types::STRING, length: 32)]
+abstract class Session extends AbstractEntity
 {
-    /** The record the session is read from, which is what says the app it belongs to. */
-    #[ORM\Column(type: Types::STRING, length: 255, unique: true)]
-    protected string $path;
-
     /**
      * Null for an agent a package ships: that one is code, it has no record,
      * and `agentName` is all there is to remember it by.
@@ -66,30 +65,6 @@ class Session extends AbstractEntity
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
     protected ?DateTimeInterface $dateLastMessage = null;
-
-    /** The engine's own identifier, null until the first turn has been answered. */
-    #[ORM\Column(type: Types::STRING, length: 255, nullable: true)]
-    protected ?string $sdkId = null;
-
-    public function __construct(string $path)
-    {
-        parent::__construct();
-
-        $this->path = $path;
-
-        $this->setId(self::idFor($path));
-    }
-
-    /** The identity the record is named by, read straight off the file name. */
-    public static function idFor(string $path): Uuid
-    {
-        return Uuid::fromString(pathinfo($path, PATHINFO_FILENAME));
-    }
-
-    public function getPath(): string
-    {
-        return $this->path;
-    }
 
     public function getAgent(): ?Agent
     {
@@ -175,15 +150,4 @@ class Session extends AbstractEntity
         return $this;
     }
 
-    public function getSdkId(): ?string
-    {
-        return $this->sdkId;
-    }
-
-    public function setSdkId(?string $sdkId): self
-    {
-        $this->sdkId = $sdkId;
-
-        return $this;
-    }
 }

@@ -1,15 +1,11 @@
 {
     "name": "session",
     "type": "class",
-    "description": "One conversation held in the app, projected from its record file.\nEverything about the conversation except the messages: who ran it, what it\nwas called, where it got to. The transcript belongs to the engine and stays\nout — `sdkId` is the thread back to it.\nLike an agent, the record is named by its own identity — `<uuid>.yml` — so\nthe row takes that uuid and a file that is gone leaves no row behind.",
+    "description": "One conversation held in the app, whatever engine holds it.\nEverything about the conversation except the messages: who ran it, what it\nwas called, where it got to. What ties it to its engine — a transcript on\ndisk, a session on a remote server — is the engine's own and lives in the\nsubclass of that engine, each in a table of its own joined to this one.\nThe root of the hierarchy is what the api, the live topics and the browser\nknow: every kind is a `session` to them, told apart by `engine`, which the\nsubclasses name themselves after — `ClaudeSession` is `claude`.",
     "properties": [
         {
             "name": "id",
             "type": "Symfony\\Component\\Uid\\Uuid"
-        },
-        {
-            "name": "path",
-            "type": "string"
         },
         {
             "name": "agent",
@@ -51,13 +47,16 @@
             "default": null
         },
         {
-            "name": "sdkId",
+            "name": "engine",
             "type": "string",
-            "nullable": true,
-            "default": null
+            "readOnly": true
         }
     ],
     "methods": [
+        {
+            "type": "method",
+            "name": "__construct"
+        },
         {
             "type": "method",
             "name": "buildEntityPath",
@@ -115,37 +114,6 @@
         {
             "type": "method",
             "name": "getCamelName",
-            "return": {
-                "type": "string"
-            }
-        },
-        {
-            "type": "method",
-            "name": "__construct",
-            "parameters": [
-                {
-                    "type": "string",
-                    "name": "path"
-                }
-            ]
-        },
-        {
-            "type": "method",
-            "name": "idFor",
-            "description": "The identity the record is named by, read straight off the file name.",
-            "parameters": [
-                {
-                    "type": "string",
-                    "name": "path"
-                }
-            ],
-            "return": {
-                "type": "Uuid"
-            }
-        },
-        {
-            "type": "method",
-            "name": "getPath",
             "return": {
                 "type": "string"
             }
@@ -289,26 +257,10 @@
             "return": {
                 "type": "self"
             }
-        },
-        {
-            "type": "method",
-            "name": "getSdkId",
-            "return": {
-                "type": "string"
-            }
-        },
-        {
-            "type": "method",
-            "name": "setSdkId",
-            "parameters": [
-                {
-                    "type": "string",
-                    "name": "sdkId"
-                }
-            ],
-            "return": {
-                "type": "self"
-            }
         }
-    ]
+    ],
+    "discriminator": {
+        "property": "engine",
+        "value": "session"
+    }
 }

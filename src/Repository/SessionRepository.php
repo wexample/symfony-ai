@@ -3,13 +3,16 @@
 namespace Wexample\SymfonyAi\Repository;
 
 use Doctrine\ORM\QueryBuilder;
-use Symfony\Component\Uid\Uuid;
 use Wexample\SymfonyAi\Entity\Agent;
 use Wexample\SymfonyAi\Entity\Session;
 use Wexample\SymfonyAi\Entity\Traits\Manipulator\SessionEntityManipulatorTrait;
 use Wexample\SymfonyHelpers\Repository\AbstractRepository;
 
 /**
+ * The conversations of every engine: what is asked of a session as such.
+ * What an engine alone can answer — a Claude session by the record it was
+ * read from — is asked of the engine's own repository, built on this one.
+ *
  * @method Session|null find($id, $lockMode = null, $lockVersion = null)
  * @method Session|null findOneBy(array $criteria, array $orderBy = null)
  * @method Session[]    findAll()
@@ -18,17 +21,6 @@ use Wexample\SymfonyHelpers\Repository\AbstractRepository;
 class SessionRepository extends AbstractRepository
 {
     use SessionEntityManipulatorTrait;
-
-    /**
-     * A conversation read from the record sitting at that path.
-     *
-     * Nothing else is set: the record says what the session is, so whoever
-     * wrote it hydrates the row from the file rather than from memory.
-     */
-    public function createNewSession(string $path): Session
-    {
-        return new Session($path);
-    }
 
     /**
      * The conversations one agent held, the one last spoken to first.
@@ -50,42 +42,6 @@ class SessionRepository extends AbstractRepository
         return $this->queryLastSpokenFirst()
             ->where($this->queryField('agent').' = :agent')
             ->setParameter('agent', $agent);
-    }
-
-    /**
-     * The conversations held inside one app, the one last spoken to first. What
-     * ties a session to an app is the record it was read from, which lies inside
-     * it.
-     *
-     * @return Session[]
-     */
-    public function findByPathPrefix(string $prefix): array
-    {
-        return $this->queryLastSpokenFirst()
-            ->where($this->queryField('path').' LIKE :prefix')
-            ->setParameter('prefix', addcslashes($prefix, '%_\\').'/%')
-            ->getQuery()
-            ->getResult();
-    }
-
-    /**
-     * One conversation, on condition that it was held inside that directory.
-     *
-     * Asked for this way rather than by identity alone wherever the address
-     * names both: another app's conversation answering there would be shown,
-     * and spoken in, under a name that does not hold it.
-     */
-    public function findByPathPrefixAndId(
-        string $prefix,
-        Uuid $id,
-    ): ?Session {
-        foreach ($this->findByPathPrefix($prefix) as $session) {
-            if ($session->getId()->equals($id)) {
-                return $session;
-            }
-        }
-
-        return null;
     }
 
     /**
@@ -111,7 +67,7 @@ class SessionRepository extends AbstractRepository
      * the moment it was opened — which is the last thing that happened to it.
      * Without that fallback those rows sort among themselves by nothing at all.
      */
-    private function queryLastSpokenFirst(): QueryBuilder
+    protected function queryLastSpokenFirst(): QueryBuilder
     {
         // The alias the helpers of the base repository expect: counting a
         // builder, which is what a paginated listing does first, goes through
