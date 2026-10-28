@@ -1,6 +1,6 @@
 # symfony-ai
 
-Version: 4.0.1
+Version: 5.0.0
 
 Agents and models as Symfony entities
 
