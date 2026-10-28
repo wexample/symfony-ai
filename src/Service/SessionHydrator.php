@@ -6,8 +6,8 @@ use DateTime;
 use DateTimeInterface;
 use Symfony\Component\Uid\Uuid;
 use Wexample\SymfonyAi\Entity\Agent;
-use Wexample\SymfonyAi\Entity\Model;
 use Wexample\SymfonyAi\Entity\ClaudeSession;
+use Wexample\SymfonyAi\Entity\Model;
 use Wexample\SymfonyAi\Repository\AgentRepository;
 use Wexample\SymfonyAi\Repository\ModelRepository;
 
