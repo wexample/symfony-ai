@@ -5,3 +5,5 @@ en:
     system: System
     tool: Tool
     user: You
+  tool:
+    label: Tool

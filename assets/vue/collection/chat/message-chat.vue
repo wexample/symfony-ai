@@ -62,8 +62,52 @@ export default {
       return this.trans(`@vue::author.${entity.type}`);
     },
 
+    // A tool call is a short line naming the tool; how a given tool is drawn
+    // beyond that — a progress bar — is the renderer registered under its name.
     getMessageContent(entity) {
+      const call = this.readToolCall(entity);
+      if (call) {
+        const render = this.getToolRenderers()[call.name];
+        return render ? render(call) : `${this.trans('@vue::tool.label')} · ${call.name}`;
+      }
+
       return entity.body ?? '';
+    },
+
+    // By tool name, what draws its call in the thread: `(call) => string`.
+    // None by default; a subclass, or an app extending the chat, adds its own.
+    getToolRenderers() {
+      return {};
+    },
+
+    // What the page answered to a tool is plumbing: kept, never drawn.
+    isMessageShown(entity) {
+      return !(entity.type === TYPE_TOOL && this.readToolBody(entity)?.callId);
+    },
+
+    // The wait for an answer ends on what the agent says, not on the lines a
+    // tool adds on the way: those count as the reader's own.
+    isOwnMessage(entity) {
+      return entity.type === 'user' || entity.type === TYPE_TOOL;
+    },
+
+    readToolBody(entity) {
+      if (entity.type !== TYPE_TOOL) {
+        return null;
+      }
+
+      try {
+        return JSON.parse(entity.body ?? '');
+      } catch (error) {
+        return null;
+      }
+    },
+
+    // The call the agent made, null for any other line.
+    readToolCall(entity) {
+      const body = this.readToolBody(entity);
+
+      return typeof body?.name === 'string' && !body.callId ? body : null;
     },
 
     getMessageDate(entity) {
@@ -126,7 +170,6 @@ export default {
         return;
       }
 
-      this.awaitingReply = true;
       await this.app.getServiceOrFail(ApiService).getClient().post({
         path: 'message/create',
         options: {

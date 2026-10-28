@@ -65,12 +65,13 @@ class MessageRepository extends AbstractRepository
         Session $session,
         string $type,
         string $body,
+        ?string $providerMessageIdentifier = null,
     ): Message {
-        $message = $this->saveNewMessage(
-            $session,
-            $type,
-            $body
-        );
+        $message = $this->createNewMessage($session, $type, $body);
+        // Unique: what names the message twice is written once, whoever
+        // writes it second being refused by the database.
+        $message->setProviderMessageIdentifier($providerMessageIdentifier);
+        $this->save($message);
 
         $this->eventDispatcher->dispatch(
             new MessageCreatedEvent($message)

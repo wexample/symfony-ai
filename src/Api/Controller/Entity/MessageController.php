@@ -2,6 +2,7 @@
 
 namespace Wexample\SymfonyAi\Api\Controller\Entity;
 
+use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Attribute\Route;
 use Wexample\SymfonyAi\Api\Dto\Entity\Message\CreateMessageDto;
@@ -31,6 +32,9 @@ class MessageController extends AbstractApiController
 
     final public const string ROUTE_CREATE = 'create';
 
+    /** What names the answer to a tool call, by the call: one per call. */
+    final public const string TOOL_RESULT_PREFIX = 'tool_result:';
+
     final public const string ROUTE_LIST = 'list';
 
     /**
@@ -58,9 +62,19 @@ class MessageController extends AbstractApiController
         // of the session's kind: none voting, nobody may.
         $this->denyAccessUnlessGranted(AbstractEntityVoter::EDIT, $session);
 
+        $identifier = null;
+
         if (is_array($result = $createMessageDto->toolResult)) {
             if (! is_string($result['tool'] ?? null) || ! is_string($result['callId'] ?? null)) {
                 return self::apiResponseError('A tool result names its tool and the call it answers.');
+            }
+
+            // A call is answered once, however many pages ran it: the second
+            // answer is the first one, and the engine is not asked again.
+            $identifier = self::TOOL_RESULT_PREFIX.$result['callId'];
+
+            if ($existing = $messageRepository->findOneByProviderMessageIdentifier($identifier)) {
+                return self::apiResponseSuccess(data: $normalizer->normalize($existing));
             }
 
             $type = Message::TYPE_TOOL;
@@ -74,11 +88,15 @@ class MessageController extends AbstractApiController
             }
         }
 
-        return self::apiResponseSuccess(
-            data: $normalizer->normalize(
-                $messageRepository->saveNewMessageAndPushEvent($session, $type, $body)
-            )
-        );
+        try {
+            $message = $messageRepository->saveNewMessageAndPushEvent($session, $type, $body, $identifier);
+        } catch (UniqueConstraintViolationException) {
+            // Two pages answered the same call at the same instant: the other
+            // one was written first, and is the answer.
+            return self::apiResponseSuccess(data: ['duplicate' => true]);
+        }
+
+        return self::apiResponseSuccess(data: $normalizer->normalize($message));
     }
 
     #[Route(path: 'list', name: self::ROUTE_LIST, methods: AbstractController::ROUTE_OPTIONS_METHOD_ONLY_GET, options: AbstractController::ROUTE_OPTIONS_ONLY_EXPOSE)]
