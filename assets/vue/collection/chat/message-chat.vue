@@ -1,7 +1,5 @@
 <script>
 import AbstractEntityChat from '@wexample/symfony-design-system/components/collection/chat/abstract-entity-chat/abstract-entity-chat.vue';
-import AbstractEntityCollectionVueMixin from '@wexample/symfony-design-system/js/Vue/AbstractEntityCollectionVueMixin';
-import AgentToolsService from '@wexample/symfony-loader/js/Services/AgentToolsService';
 import ApiService from '@wexample/symfony-loader/js/Services/ApiService';
 import Message from '../../../Entity/Message';
 
@@ -62,33 +60,14 @@ export default {
       return this.trans(`@vue::author.${entity.type}`);
     },
 
-    // A tool call is a short line naming the tool; how a given tool is drawn
-    // beyond that — a progress bar — is the renderer registered under its name.
     getMessageContent(entity) {
-      const call = this.readToolCall(entity);
-      if (call) {
-        const render = this.getToolRenderers()[call.name];
-        return render ? render(call) : `${this.trans('@vue::tool.label')} · ${call.name}`;
-      }
-
       return entity.body ?? '';
     },
 
-    // By tool name, what draws its call in the thread: `(call) => string`.
-    // None by default; a subclass, or an app extending the chat, adds its own.
-    getToolRenderers() {
-      return {};
-    },
-
-    // What the page answered to a tool is plumbing: kept, never drawn.
-    isMessageShown(entity) {
-      return !(entity.type === TYPE_TOOL && this.readToolBody(entity)?.callId);
-    },
-
-    // The wait for an answer ends on what the agent says, not on the lines a
-    // tool adds on the way: those count as the reader's own.
+    // The wait for an answer ends on what the agent says, not on what the
+    // operator wrote.
     isOwnMessage(entity) {
-      return entity.type === 'user' || entity.type === TYPE_TOOL;
+      return entity.type === 'user';
     },
 
     readToolBody(entity) {
@@ -108,6 +87,32 @@ export default {
       const body = this.readToolBody(entity);
 
       return typeof body?.name === 'string' && !body.callId ? body : null;
+    },
+
+    isToolResult(entity) {
+      return Boolean(this.readToolBody(entity)?.callId);
+    },
+
+    // The call's own turn names it: the engine answers a call by the id of
+    // the turn that carried it.
+    getToolCallId(entity) {
+      return entity.id ?? null;
+    },
+
+    async postToolResult(call, callId, results) {
+      await this.app.getServiceOrFail(ApiService).getClient().post({
+        path: 'message/create',
+        options: {
+          json: {
+            session: this.sessionId,
+            toolResult: {
+              tool: call.name,
+              callId,
+              results
+            }
+          }
+        }
+      });
     },
 
     getMessageDate(entity) {
@@ -137,52 +142,6 @@ export default {
         id: this.sessionId,
         event: EVENT_MESSAGE_CREATED
       };
-    },
-
-    // A tool call arrives on the session's topic like any turn: the page runs
-    // the tool its components declare (AgentToolsService), then tells the
-    // engine what came of it, and the engine answers from there.
-    onLiveSourceMessage(payload, source) {
-      AbstractEntityCollectionVueMixin.methods.onLiveSourceMessage.call(this, payload, source);
-
-      const message = payload?.data?.entity ?? payload?.data;
-      if (payload?.event === EVENT_MESSAGE_CREATED && message?.type === TYPE_TOOL) {
-        this.runToolCall(message);
-      }
-    },
-
-    async runToolCall(message) {
-      let call;
-      try {
-        call = JSON.parse(message.body ?? '');
-      } catch (error) {
-        return;
-      }
-
-      if (!message.id || typeof call?.name !== 'string' || call.callId) {
-        return;
-      }
-
-      // Run once per page, however many times the call reaches it: null when
-      // it already ran, and the engine already has its answer.
-      const outcome = await this.app.getServiceOrFail(AgentToolsService).run(message.id, call.name, call.arguments ?? {});
-      if (outcome === null) {
-        return;
-      }
-
-      await this.app.getServiceOrFail(ApiService).getClient().post({
-        path: 'message/create',
-        options: {
-          json: {
-            session: this.sessionId,
-            toolResult: {
-              tool: call.name,
-              callId: message.id,
-              results: [outcome.error !== undefined ? { error: outcome.error } : outcome.value]
-            }
-          }
-        }
-      });
     }
   }
 };
