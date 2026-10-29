@@ -1,7 +1,7 @@
 {
   "name": "wexample/symfony-ai",
   "description": "Agents and models as Symfony entities",
-  "version": "5.0.1",
+  "version": "5.0.2",
   "type": "library",
   "license": "MIT",
   "autoload": {
@@ -21,7 +21,7 @@
     "symfony/uid": ">=6.2",
     "wexample/php-pseudocode": ">=3.0.0",
     "wexample/symfony-api": ">=16.0.0",
-    "wexample/symfony-design-system": ">=40.0.0",
+    "wexample/symfony-design-system": ">=41.0.0",
     "wexample/symfony-forms": ">=14.0.2",
     "wexample/symfony-helpers": ">=19.1.0",
     "wexample/symfony-live": ">=5.8.0",
