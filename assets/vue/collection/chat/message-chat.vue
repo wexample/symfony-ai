@@ -54,6 +54,12 @@ export default {
       return true;
     },
 
+    // What the operator writes is answered by an agent, in the background:
+    // the thread shows the answer is coming.
+    expectsReply() {
+      return true;
+    },
+
     // A message has no author of its own: who spoke is its type, and the label
     // is all the reader ever sees of it.
     getMessageAuthor(entity) {
@@ -97,6 +103,10 @@ export default {
     // the turn that carried it.
     getToolCallId(entity) {
       return entity.id ?? null;
+    },
+
+    getConversationKey() {
+      return this.sessionId;
     },
 
     async postToolResult(call, callId, results) {
