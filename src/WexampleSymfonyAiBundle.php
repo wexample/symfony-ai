@@ -3,21 +3,14 @@
 namespace Wexample\SymfonyAi;
 
 use Wexample\SymfonyHelpers\Class\AbstractBundle;
-use Wexample\SymfonyHelpers\Helper\BundleHelper;
-use Wexample\SymfonyHelpers\Interface\LoaderBundleInterface;
-use Wexample\SymfonyPseudocode\Interface\PseudocodeBundleInterface;
 
-class WexampleSymfonyAiBundle extends AbstractBundle implements LoaderBundleInterface, PseudocodeBundleInterface
+/**
+ * What an application offers to an agent: the tools it runs for it on the
+ * server (AgentBackToolInterface), the pages it opens to it (AgentRoute), and
+ * what it lets it use (the `agent_tools` configuration). Nothing of the
+ * conversations themselves, which an engine or `symfony-ai-conversation`
+ * keeps.
+ */
+class WexampleSymfonyAiBundle extends AbstractBundle
 {
-    public static function getLoaderFrontPaths(): array
-    {
-        return [
-            BundleHelper::getBundleCssAlias(static::class) => __DIR__.'/../assets/',
-        ];
-    }
-
-    public static function getPseudocodeSourcePaths(): array
-    {
-        return [__DIR__.'/'];
-    }
 }

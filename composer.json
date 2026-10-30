@@ -1,12 +1,17 @@
 {
   "name": "wexample/symfony-ai",
-  "description": "Agents and models as Symfony entities",
+  "description": "What an application offers to an agent: the tools it runs for it on the server, the pages it opens to it, the shapes of their exchanges",
   "version": "5.0.4",
   "type": "library",
   "license": "MIT",
   "autoload": {
     "psr-4": {
       "Wexample\\SymfonyAi\\": "src/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Wexample\\SymfonyAi\\Tests\\": "tests/"
     }
   },
   "authors": [
@@ -17,15 +22,13 @@
   ],
   "require": {
     "php": ">=8.5",
-    "doctrine/orm": "^3.0",
-    "symfony/uid": ">=6.2",
-    "wexample/php-pseudocode": ">=3.0.0",
-    "wexample/symfony-api": ">=16.0.0",
-    "wexample/symfony-design-system": ">=42.0.0",
-    "wexample/symfony-forms": ">=14.0.2",
+    "psr/cache": "^3.0",
+    "symfony/cache": ">=7.4 || ^8.0",
+    "symfony/lock": ">=7.4 || ^8.0",
+    "symfony/security-bundle": ">=7.4 || ^8.0",
+    "wexample/symfony-design-system": ">=41.0.1",
     "wexample/symfony-helpers": ">=19.1.0",
-    "wexample/symfony-live": ">=5.8.0",
-    "wexample/symfony-pseudocode": ">=4.0.2"
+    "wexample/symfony-loader": ">=26.1.0"
   },
   "extra": {
     "install": {
