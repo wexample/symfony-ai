@@ -5,9 +5,11 @@ namespace Wexample\SymfonyAi\Api\Controller\Entity;
 use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Uid\Uuid;
 use Wexample\SymfonyAi\Api\Dto\Entity\Message\CreateMessageDto;
 use Wexample\SymfonyAi\Api\Normalizer\Entity\Message\DefaultMessageNormalizer;
 use Wexample\SymfonyAi\Entity\Message;
+use Wexample\SymfonyAi\EventListener\AgentBackToolListener;
 use Wexample\SymfonyAi\Repository\MessageRepository;
 use Wexample\SymfonyAi\Repository\SessionRepository;
 use Wexample\SymfonyApi\Api\Attribute\QueryOption\LengthQueryOption;
@@ -18,6 +20,7 @@ use Wexample\SymfonyApi\Api\Class\ApiResponse;
 use Wexample\SymfonyApi\Api\Controller\AbstractApiController;
 use Wexample\SymfonyHelpers\Controller\AbstractController;
 use Wexample\SymfonyHelpers\Voter\AbstractEntityVoter;
+use Wexample\SymfonyLoader\Service\AgentBackToolsService;
 
 /**
  * What the conversation is read through.
@@ -51,6 +54,7 @@ class MessageController extends AbstractApiController
         MessageRepository $messageRepository,
         SessionRepository $sessionRepository,
         DefaultMessageNormalizer $normalizer,
+        AgentBackToolsService $agentBackTools,
     ): ApiResponse {
         $session = $sessionRepository->find($createMessageDto->session);
 
@@ -75,6 +79,16 @@ class MessageController extends AbstractApiController
 
             if ($existing = $messageRepository->findOneByProviderMessageIdentifier($identifier)) {
                 return self::apiResponseSuccess(data: $normalizer->normalize($existing));
+            }
+
+            // The page lists its own tools; the server's join them here, on
+            // their way to the agent, the page knowing nothing of them.
+            $called = Uuid::isValid($result['callId']) ? $messageRepository->find($result['callId']) : null;
+            $call = $called ? AgentBackToolListener::readCall($called) : null;
+
+            if ($call && is_array($result['results'] ?? null) && $agentBackTools->isToolList($call)) {
+                $result['results'] = $agentBackTools->completeToolList($call, $result['results']);
+                $result['count'] = count($result['results']);
             }
 
             $type = Message::TYPE_TOOL;
