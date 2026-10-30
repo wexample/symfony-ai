@@ -49,7 +49,7 @@ class AgentBackToolListener implements ResetInterface
         $message = $args->getObject();
         $call = $message instanceof Message ? self::readCall($message) : null;
 
-        if (! $call || $this->agentBackTools->isAnsweredHere($call) || ! $this->agentBackTools->resolve($call)) {
+        if (! $call || $this->agentBackTools->isAnsweredHere($call) || ! $this->agentBackTools->handles($call)) {
             return;
         }
 
