@@ -34,5 +34,8 @@
     "install": {
       "bundle_env": "all"
     }
+  },
+  "require-dev": {
+    "phpunit/phpunit": "^13"
   }
 }
