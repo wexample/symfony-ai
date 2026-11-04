@@ -2,15 +2,15 @@
 
 namespace Wexample\SymfonyAi\Service\AgentTool;
 
+use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouterInterface;
-use Wexample\SymfonyDesignSystem\Service\RouteAccessService;
-use Psr\Log\LoggerInterface;
-use Wexample\SymfonyHelpers\Attribute\RouteDescription;
 use Wexample\SymfonyAi\Attribute\AgentRoute;
 use Wexample\SymfonyAi\Interface\AgentBackToolInterface;
+use Wexample\SymfonyDesignSystem\Service\RouteAccessService;
+use Wexample\SymfonyHelpers\Attribute\RouteDescription;
 
 /**
  * The pages offered to the agents (`#[AgentRoute]` on their controller,

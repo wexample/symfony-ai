@@ -101,7 +101,7 @@ class AgentBackToolsServiceTest extends TestCase
     {
         $tokenStorage = &$this->tokenStorage;
 
-        return new class($name, $tokenStorage) implements AgentBackToolInterface {
+        return new class ($name, $tokenStorage) implements AgentBackToolInterface {
             public function __construct(private string $name, private TokenStorage $tokenStorage)
             {
             }

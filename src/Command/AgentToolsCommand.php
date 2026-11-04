@@ -9,10 +9,10 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
-use Wexample\SymfonyHelpers\Command\AbstractBundleCommand;
-use Wexample\SymfonyHelpers\Service\BundleService;
 use Wexample\SymfonyAi\Service\AgentBackToolsService;
 use Wexample\SymfonyAi\Traits\SymfonyAiBundleClassTrait;
+use Wexample\SymfonyHelpers\Command\AbstractBundleCommand;
+use Wexample\SymfonyHelpers\Service\BundleService;
 
 /**
  * The tools an agent finds on the server, as `list_tools` adds them to the
