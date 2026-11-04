@@ -26,7 +26,7 @@
     "symfony/cache": ">=7.4 || ^8.0",
     "symfony/lock": ">=7.4 || ^8.0",
     "symfony/security-bundle": ">=7.4 || ^8.0",
-    "wexample/symfony-design-system": ">=41.0.1",
+    "wexample/symfony-design-system": ">=42.0.0",
     "wexample/symfony-helpers": ">=19.1.0",
     "wexample/symfony-loader": ">=26.1.0"
   },
