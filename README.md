@@ -1,5 +1,7 @@
 # symfony-ai
 
-What an application offers to an agent, whatever engine runs it: the tools it runs for the agent on its server, the pages it opens to it, and the shapes of what they exchange. No entity, no route of its own: the conversations an application keeps are `wexample/symfony-ai-conversation`'s.
+Version: 6.0.0
 
-See `.wex/knowledge/built/en/`.
+What an application offers to an agent: the tools it runs for it on the server, the pages it opens to it, the shapes of their exchanges
+
+## Table of Contents
