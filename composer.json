@@ -1,7 +1,7 @@
 {
   "name": "wexample/symfony-ai",
   "description": "What an application offers to an agent: the tools it runs for it on the server, the pages it opens to it, the shapes of their exchanges",
-  "version": "6.0.1",
+  "version": "6.0.2",
   "type": "library",
   "license": "MIT",
   "autoload": {
@@ -28,7 +28,7 @@
     "symfony/security-bundle": ">=7.4 || ^8.0",
     "wexample/symfony-design-system": ">=43.0.0",
     "wexample/symfony-helpers": ">=19.1.0",
-    "wexample/symfony-loader": ">=27.2.0"
+    "wexample/symfony-loader": ">=27.3.0"
   },
   "extra": {
     "install": {
