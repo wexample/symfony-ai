@@ -3,6 +3,7 @@
 namespace Wexample\SymfonyAi\Tests\Unit\Service;
 
 use PHPUnit\Framework\TestCase;
+use Psr\Log\LoggerInterface;
 use RuntimeException;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
 use Symfony\Component\Security\Core\User\InMemoryUser;
@@ -95,6 +96,22 @@ class AgentBackToolsServiceTest extends TestCase
         self::assertTrue($service->handles(['name' => 'inspect_page']));
         self::assertSame(['echo'], array_column($service->answer(['name' => 'list_tools'])[0], 'name'));
         self::assertSame([['error' => 'No tool "inspect_page": list_tools returns the ones there are.']], $service->answer(['name' => 'call_tool', 'arguments' => ['name' => 'inspect_page']]));
+    }
+
+    public function testAFailingToolIsLoggedAndItsMessageHandedToTheAgent(): void
+    {
+        $logger = $this->createMock(LoggerInterface::class);
+        $logger->expects($this->once())
+            ->method('error')
+            ->with(
+                $this->stringContains('{tool}'),
+                $this->callback(static fn (array $context): bool => 'fail' === $context['tool']
+                    && $context['exception'] instanceof RuntimeException)
+            );
+
+        $service = new AgentBackToolsService([$this->tool('fail')], $this->tokenStorage, logger: $logger);
+
+        self::assertSame([['error' => 'fail went wrong']], $service->answer(['name' => 'fail']));
     }
 
     private function tool(string $name): AgentBackToolInterface

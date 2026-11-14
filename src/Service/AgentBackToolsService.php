@@ -2,6 +2,7 @@
 
 namespace Wexample\SymfonyAi\Service;
 
+use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\DependencyInjection\Attribute\AutowireIterator;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
@@ -63,6 +64,7 @@ final readonly class AgentBackToolsService
         private TokenStorageInterface $tokenStorage,
         #[Autowire(param: WexampleSymfonyAiExtension::PARAMETER_AGENT_TOOLS)]
         private array $settings = [],
+        private ?LoggerInterface $logger = null,
     ) {
     }
 
@@ -234,6 +236,14 @@ final readonly class AgentBackToolsService
         try {
             return [$this->runAs($user, fn () => $resolved['tool']->execute($resolved['arguments']))];
         } catch (Throwable $exception) {
+            // The agent reads the message and may well try again; the trace
+            // is left here, for whoever has to find out why the tool failed.
+            $this->logger?->error('Agent tool "{tool}" failed: {message}', [
+                'tool' => $resolved['tool']->getName(),
+                'message' => $exception->getMessage(),
+                'exception' => $exception,
+            ]);
+
             return [['error' => $exception->getMessage()]];
         }
     }
