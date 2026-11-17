@@ -1,6 +1,6 @@
 # symfony-ai
 
-Version: 6.1.0
+Version: 6.1.1
 
 What an application offers to an agent: the tools it runs for it on the server, the pages it opens to it, the shapes of their exchanges
 
